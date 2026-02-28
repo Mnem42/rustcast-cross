@@ -23,6 +23,8 @@ For bug fixes, and helping people to solve their github issues: see
    request merged faster.
 1. Being warning-free with pedantic lints (`clippy -- "-Wclippy::pedantic"`) is nice, but not
    necessary
+1. Please follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+1. Please add to the [changelog](CHANGELOG.md)
 
 ## Codebase:
 

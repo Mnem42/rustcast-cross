@@ -1,11 +1,10 @@
 [package]
 name = "rustcast"
-version = "0.5.2"
+version = "0.6.0"
 edition = "2024"
 
 [lints.rustdoc]
 missing_docs = "warn"
-
 
 [target.'cfg(target_os = "windows")'.dependencies]
 winreg = "0.52"
