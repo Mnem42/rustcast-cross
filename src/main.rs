@@ -120,6 +120,7 @@ fn main() -> iced::Result {
         let manager = GlobalHotKeyManager::new().unwrap();
 
         let show_hide = config.toggle_hotkey.parse().unwrap();
+        tracing::debug!(target: "init", "Show/hide hotkey: {:?}", show_hide);
 
         let mut hotkeys = vec![show_hide];
 
@@ -158,7 +159,7 @@ fn main() -> iced::Result {
         tile::update::handle_update,
         tile::elm::view,
     )
-    .subscription(Tile::subscription)
-    .theme(Tile::theme)
-    .run()
+        .subscription(Tile::subscription)
+        .theme(Tile::theme)
+        .run()
 }

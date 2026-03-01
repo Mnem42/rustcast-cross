@@ -27,7 +27,7 @@ pub struct Config {
 
     pub placeholder: String,
     pub search_url: String,
-    pub haptic_feedback: bool,
+    // pub haptic_feedback: bool,
     pub show_trayicon: bool,
     pub shells: Vec<Shelly>,
 
@@ -62,7 +62,10 @@ impl Default for Config {
             theme: Theme::default(),
             placeholder: String::from("Time to be productive!"),
             search_url: "https://google.com/search?q=%s".to_string(),
+
+            #[cfg(target_os="macos")]
             haptic_feedback: false,
+
             show_trayicon: true,
             shells: vec![],
             index_dirs,

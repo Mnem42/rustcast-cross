@@ -219,7 +219,110 @@ pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
             ])
         }
 
-        Message::KeyPressed(_) => Task::none(),
+        Message::KeyPressed(hk_id) => {
+            let is_clipboard_hotkey = tile
+                .clipboard_hotkey
+                .map(|hotkey| hotkey.id == hk_id)
+                .unwrap_or(false);
+            let is_open_hotkey = hk_id == tile.hotkey.id;
+
+            let clipboard_page_task = if is_clipboard_hotkey {
+                Task::done(Message::SwitchToPage(Page::ClipboardHistory))
+            } else if is_open_hotkey {
+                Task::done(Message::SwitchToPage(Page::Main))
+            } else {
+                Task::none()
+            };
+
+            if is_open_hotkey || is_clipboard_hotkey {
+                if !tile.visible {
+                    return Task::batch([open_window(), clipboard_page_task]);
+                }
+
+                tile.visible = !tile.visible;
+
+                let clear_search_query = if tile.config.buffer_rules.clear_on_hide {
+                    Task::done(Message::ClearSearchQuery)
+                } else {
+                    Task::none()
+                };
+
+                let to_close = window::latest().map(|x| x.unwrap());
+                Task::batch([
+                    to_close.map(Message::HideWindow),
+                    clear_search_query,
+                    Task::done(Message::ReturnFocus),
+                ])
+            } else {
+                Task::none()
+            }
+        }
+
+        Message::SwitchToPage(page) => {
+            tile.page = page;
+            Task::batch([
+                Task::done(Message::ClearSearchQuery),
+                Task::done(Message::ClearSearchResults),
+            ])
+        }
+
+        Message::RunFunction(command) => {
+            command.execute(&tile.config, &tile.query);
+
+            let return_focus_task = match &command {
+                Function::OpenApp(_) | Function::OpenPrefPane | Function::GoogleSearch(_) => {
+                    Task::none()
+                }
+                _ => Task::done(Message::ReturnFocus),
+            };
+
+            if tile.config.buffer_rules.clear_on_enter {
+                window::latest()
+                    .map(|x| x.unwrap())
+                    .map(Message::HideWindow)
+                    .chain(Task::done(Message::ClearSearchQuery))
+                    .chain(return_focus_task)
+            } else {
+                Task::none()
+            }
+        }
+
+        Message::HideWindow(a) => {
+            tile.visible = false;
+            tile.focused = false;
+            tile.page = Page::Main;
+            Task::batch([window::close(a), Task::done(Message::ClearSearchResults)])
+        }
+
+        Message::ReturnFocus => {
+            tile.restore_frontmost();
+            Task::none()
+        }
+
+        Message::FocusTextInput(update_query_char) => {
+            match update_query_char {
+                Move::Forwards(query_char) => {
+                    tile.query += &query_char.clone();
+                    tile.query_lc += &query_char.clone().to_lowercase();
+                }
+                Move::Back => {
+                    tile.query.pop();
+                    tile.query_lc.pop();
+                }
+            }
+            let updated_query = tile.query.clone();
+            Task::batch([
+                operation::focus("query"),
+                window::latest()
+                    .map(|x| x.unwrap())
+                    .map(move |x| Message::SearchQueryChanged(updated_query.clone(), x)),
+            ])
+        },
+
+        Message::ClearSearchResults => {
+            tile.results = vec![];
+            Task::none()
+        },
 
         #[cfg(not(target_os = "linux"))]
         Message::HotkeyPressed(hk_id) => {
@@ -298,11 +401,6 @@ pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
                     .map(|x| x.unwrap())
                     .map(move |x| Message::SearchQueryChanged(updated_query.clone(), x)),
             ])
-        }
-
-        Message::ClearSearchResults => {
-            tile.results = vec![];
-            Task::none()
         }
 
         Message::WindowFocusChanged(wid, focused) => {
