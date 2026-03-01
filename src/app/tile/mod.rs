@@ -346,7 +346,6 @@ fn handle_hotkeys() -> impl futures::Stream<Item = Message> {
         let receiver = GlobalHotKeyEvent::receiver();
 
         loop {
-            tracing::debug!("boop");
             if let Ok(event) = receiver.recv()
                 && event.state == HotKeyState::Pressed
             {
