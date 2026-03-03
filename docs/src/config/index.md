@@ -6,12 +6,12 @@
 {{#include ../default.toml::9}}
 ```
 
-- `Toggle Hotkey`, `clipboard_hotkey`  
+- `toggle_hotkey`, `clipboard_hotkey`  
   These hide and show the rustcast window, just opening to different pages. `toggle_hotkey` opens
   to the main search page, clipboard hotkey opens to the clipboard history page.
 
   You **MUST** Provide a Key, but a modifier is optional. The "letter" keys are in the format
-  `Key<LETTER>`, e.g. `KeyG`, `KeyR`
+  `Key<LETTER>` where the letter is always captials, e.g. `KeyG`, `KeyR`
 
   Some of the common valid modifiers (and the respective MacOS Key it maps to):
   - `SUPER` (Command)
@@ -21,9 +21,10 @@
 
   > see the full list [here](https://w3c.github.io/uievents-key/#keys-modifier)
 
-  Use a `+` between this and the key.
+  `+`s are used as separators between them, e.g. `CTRL+SHIFT+KeyA`, which is parsed as the
+  modifiers `CTRL` and `SHIFT`, with the key `A`.
   
-  There are too many keys to list completely, the full list is in the enum definition 
+  There are too many keys to list exhaustively, the full list is in the enum definition 
   [here](https://docs.rs/global-hotkey/0.7.0/global_hotkey/hotkey/enum.Code.html)
 
 - `placeholder`  
