@@ -219,45 +219,6 @@ pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
             ])
         }
 
-        Message::KeyPressed(hk_id) => {
-            let is_clipboard_hotkey = tile
-                .clipboard_hotkey
-                .map(|hotkey| hotkey.id == hk_id)
-                .unwrap_or(false);
-            let is_open_hotkey = hk_id == tile.hotkey.id;
-
-            let clipboard_page_task = if is_clipboard_hotkey {
-                Task::done(Message::SwitchToPage(Page::ClipboardHistory))
-            } else if is_open_hotkey {
-                Task::done(Message::SwitchToPage(Page::Main))
-            } else {
-                Task::none()
-            };
-
-            if is_open_hotkey || is_clipboard_hotkey {
-                if !tile.visible {
-                    return Task::batch([open_window(), clipboard_page_task]);
-                }
-
-                tile.visible = !tile.visible;
-
-                let clear_search_query = if tile.config.buffer_rules.clear_on_hide {
-                    Task::done(Message::ClearSearchQuery)
-                } else {
-                    Task::none()
-                };
-
-                let to_close = window::latest().map(|x| x.unwrap());
-                Task::batch([
-                    to_close.map(Message::HideWindow),
-                    clear_search_query,
-                    Task::done(Message::ReturnFocus),
-                ])
-            } else {
-                Task::none()
-            }
-        }
-
         Message::SwitchToPage(page) => {
             tile.page = page;
             Task::batch([
@@ -326,6 +287,9 @@ pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
 
         #[cfg(not(target_os = "linux"))]
         Message::HotkeyPressed(hk_id) => {
+            tracing::debug!(target: "update", "Received hotkey event (Hotkey ID {})", hk_id);
+            tracing::debug!(target: "update", "Open hotkey ID: {}", tile.hotkey.id);
+
             // Linux Clipboard and Open Hotkey are gonna be handled via a socket
             let is_clipboard_hotkey = tile
                 .clipboard_hotkey

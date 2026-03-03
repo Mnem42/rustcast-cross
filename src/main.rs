@@ -17,10 +17,10 @@ use std::path::Path;
 
 use crate::config::Config;
 use crate::logging::init::init_loggers;
-// import from utils
 use crate::utils::{get_config_file_path, get_config_installation_dir, read_config_file};
 
 use crate::app::tile::{self, Tile};
+use global_hotkey::hotkey::HotKey;
 use logging::preinit_logger;
 
 #[cfg(not(target_os = "linux"))]
@@ -82,6 +82,39 @@ fn load_config() -> Config {
     }
 }
 
+/// Initialises the hotkey manager.
+/// 
+/// **IMPORTANT:** If the hotkey manager returned dies, it will stop sending out events.
+fn init_hotkey_manager(config: &Config) -> (GlobalHotKeyManager, HotKey) {
+    let manager = GlobalHotKeyManager::new().unwrap();
+
+    let show_hide = config.toggle_hotkey.parse().unwrap();
+    tracing::debug!(target: "init", "Show/hide hotkey: {:?}", show_hide);
+
+    let mut hotkeys = vec![show_hide];
+
+    if let Some(show_clipboard) = &config.clipboard_hotkey
+        && let Some(cb_page_hk) = show_clipboard.parse().ok()
+    {
+        hotkeys.push(cb_page_hk);
+    }
+
+    let result = manager.register_all(&hotkeys);
+
+    if let Err(global_hotkey::Error::AlreadyRegistered(key)) = result {
+        if key == show_hide {
+            // It probably should give up here.
+            panic!("Couldn't register the key to open ({key})")
+        } else {
+            tracing::warn!(target: "init", "Couldn't register hotkey {}", key);
+        }
+    } else if let Err(e) = result {
+        tracing::error!("{}", e.to_string());
+    }
+
+    (manager, show_hide)
+}
+
 fn main() -> iced::Result {
     #[cfg(target_os = "macos")]
     cross_platform::macos::set_activation_policy_accessory();
@@ -116,35 +149,7 @@ fn main() -> iced::Result {
     }
 
     #[cfg(not(target_os = "linux"))]
-    let show_hide_bind = {
-        let manager = GlobalHotKeyManager::new().unwrap();
-
-        let show_hide = config.toggle_hotkey.parse().unwrap();
-        tracing::debug!(target: "init", "Show/hide hotkey: {:?}", show_hide);
-
-        let mut hotkeys = vec![show_hide];
-
-        if let Some(show_clipboard) = &config.clipboard_hotkey
-            && let Some(cb_page_hk) = show_clipboard.parse().ok()
-        {
-            hotkeys.push(cb_page_hk);
-        }
-
-        let result = manager.register_all(&hotkeys);
-
-        if let Err(global_hotkey::Error::AlreadyRegistered(key)) = result {
-            if key == show_hide {
-                // It probably should give up here.
-                panic!("Couldn't register the key to open ({key})")
-            } else {
-                tracing::warn!(target: "init", "Couldn't register hotkey {}", key);
-            }
-        } else if let Err(e) = result {
-            tracing::error!("{}", e.to_string());
-        }
-
-        show_hide
-    };
+    let (_manager, show_hide_bind) = init_hotkey_manager(&config);
 
     tracing::info!("Starting.");
 
