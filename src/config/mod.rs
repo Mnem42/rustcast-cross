@@ -27,9 +27,11 @@ pub struct Config {
 
     pub placeholder: String,
     pub search_url: String,
-    // pub haptic_feedback: bool,
     pub show_trayicon: bool,
     pub shells: Vec<Shelly>,
+
+    #[cfg(target_os = "macos")]
+    pub haptic_feedback: bool,
 
     #[serde(with = "include_patterns")]
     pub index_dirs: Vec<include_patterns::Pattern>,
