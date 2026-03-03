@@ -2,7 +2,7 @@
 
 > [!WARNING]
 >
-> These docs are probably incomplete and wonky. The most up to date docs are in the docstrings,
+> These docs are probably incomplete and wonky. The most up to date docs are in the doc comments,
 > which is kinda suboptimal, but it is what it is
 
 ## Default config
