@@ -278,12 +278,12 @@ pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
                     .map(|x| x.unwrap())
                     .map(move |x| Message::SearchQueryChanged(updated_query.clone(), x)),
             ])
-        },
+        }
 
         Message::ClearSearchResults => {
             tile.results = vec![];
             Task::none()
-        },
+        }
 
         #[cfg(not(target_os = "linux"))]
         Message::HotkeyPressed(hk_id) => {

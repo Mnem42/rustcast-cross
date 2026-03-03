@@ -65,7 +65,7 @@ impl Default for Config {
             placeholder: String::from("Time to be productive!"),
             search_url: "https://google.com/search?q=%s".to_string(),
 
-            #[cfg(target_os="macos")]
+            #[cfg(target_os = "macos")]
             haptic_feedback: false,
 
             show_trayicon: true,

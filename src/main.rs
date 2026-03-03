@@ -4,9 +4,9 @@ mod calculator;
 mod clipboard;
 mod commands;
 mod config;
-mod platform;
 mod icon;
 mod logging;
+mod platform;
 mod styles;
 mod unit_conversion;
 mod utils;
@@ -83,7 +83,7 @@ fn load_config() -> Config {
 }
 
 /// Initialises the hotkey manager.
-/// 
+///
 /// **IMPORTANT:** If the hotkey manager returned dies, it will stop sending out events.
 fn init_hotkey_manager(config: &Config) -> (GlobalHotKeyManager, HotKey) {
     let manager = GlobalHotKeyManager::new().unwrap();
@@ -164,7 +164,7 @@ fn main() -> iced::Result {
         tile::update::handle_update,
         tile::elm::view,
     )
-        .subscription(Tile::subscription)
-        .theme(Tile::theme)
-        .run()
+    .subscription(Tile::subscription)
+    .theme(Tile::theme)
+    .run()
 }
