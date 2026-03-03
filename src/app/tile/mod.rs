@@ -357,7 +357,7 @@ fn handle_hotkeys() -> impl futures::Stream<Item = Message> {
 #[cfg(target_os = "linux")]
 fn handle_socket() -> impl futures::Stream<Item = Message> {
     use crate::platform::linux::SOCKET_PATH;
-    
+
     stream::channel(100, async |mut output| {
         let clipboard = env::args().any(|arg| arg.trim() == "--cphist");
         if clipboard {
@@ -370,8 +370,8 @@ fn handle_socket() -> impl futures::Stream<Item = Message> {
 
         use tokio::net::UnixListener;
 
-        let _ = fs::remove_file(crate::SOCKET_PATH);
-        let listener = UnixListener::bind(crate::SOCKET_PATH).unwrap();
+        let _ = fs::remove_file(SOCKET_PATH);
+        let listener = UnixListener::bind(SOCKET_PATH).unwrap();
 
         while let Ok((mut stream, _address)) = listener.accept().await {
             let mut output = output.clone();
