@@ -54,7 +54,7 @@ it creates a new one at the location, with the data in [the default config](defa
   
   Google was chosen as the default because it's the most popular one.
 
-- `haptic_feedback `
+- `haptic_feedback` (macos only)
   > [!NOTE]
   >
   > All secretised's words, I don't actually understand what this does myself
