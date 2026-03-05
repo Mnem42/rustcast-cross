@@ -12,7 +12,9 @@ use objc2_app_kit::NSWorkspace;
 use objc2_foundation::NSURL;
 
 use crate::utils::open_application;
-use crate::{functions::calculator::Expr, functions::clipboard::ClipBoardContentType, config::Config};
+use crate::{
+    config::Config, functions::calculator::Expr, functions::clipboard::ClipBoardContentType,
+};
 
 /// The different functions that rustcast can perform
 #[derive(Debug, Clone, PartialEq)]

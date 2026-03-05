@@ -1,8 +1,8 @@
 mod app;
 mod app_finding;
-mod functions;
 mod commands;
 mod config;
+mod functions;
 mod hotkey;
 mod icon;
 mod logging;
