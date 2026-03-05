@@ -36,7 +36,7 @@ jobs:
     permissions:
       contents: write  # To push a branch
       id-token: write # To update the deployment status
-    runs-on: ubuntu-latest
+    runs-on: windows-latest # linux needs system deps which i cba to add a step to add
     steps:
       - name: checkout
         uses: actions/checkout@v4
