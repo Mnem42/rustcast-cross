@@ -32,6 +32,27 @@ jobs:
         with:
           name: compiled_mdbook
           path: site/book
+  rustdoc:
+    permissions:
+      contents: write  # To push a branch
+      id-token: write # To update the deployment status
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Rust (stable + rustdoc)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustdoc
+      - name: Run rustdoc
+        run: cargo doc --no-deps --target-dir site
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled_rustdoc
+          path: site/doc
   deploy:
     runs-on: ubuntu-latest
     needs: mdbook
@@ -51,6 +72,11 @@ jobs:
         with:
           name: compiled_mdbook
           path: site/book
+      - name: Download artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: compiled_rustdoc
+          path: site/doc
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
