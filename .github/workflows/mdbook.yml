@@ -3,17 +3,10 @@
 
 name: Compile MDBook (dev)
 on:
-  push:
-    branches:
-      - dev
-      - doc
-    paths:
-      - "docs/**"
-      - "CONTRIBUTING.md"
-      - "CHANGELOG.md"
+  workflow_call:
 
 jobs:
-  workflow_call:
+  compile:
     runs-on: ubuntu-latest
     permissions:
       contents: write  # To push a branch 
