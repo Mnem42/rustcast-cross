@@ -11,6 +11,10 @@ jobs:
   mdbook:
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: "Compile MDBook"
         uses: "./.github/workflows/mdbook.yml"
       - name: Upload artifacts
@@ -25,6 +29,10 @@ jobs:
       pages: write  # To push to a GitHub Pages site
       id-token: write # To update the deployment status
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact

@@ -1,7 +1,7 @@
 # Ripped from https://github.com/rust-lang/mdBook/wiki/Automated-Deployment%3A-GitHub-Actions
 # Used in site.yml
 
-name: MDBook (dev)
+name: Compile MDBook (dev)
 on:
   push:
     branches:
@@ -20,10 +20,6 @@ jobs:
       pages: write  # To push to a GitHub Pages site
       id-token: write # To update the deployment status
     steps:
-      - name: checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - name: Install latest mdbook
         run: |
           tag=$(curl 'https://api.github.com/repos/rust-lang/mdbook/releases/latest' | jq -r '.tag_name')
