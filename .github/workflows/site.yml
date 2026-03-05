@@ -37,6 +37,7 @@ jobs:
           path: site/book
   deploy:
     runs-on: ubuntu-latest
+    needs: mdbook
     permissions:
       contents: write  # To push a branch 
       pages: write  # To push to a GitHub Pages site
@@ -49,6 +50,8 @@ jobs:
           fetch-depth: 0
       - name: Setup Pages
         uses: actions/configure-pages@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
