@@ -45,7 +45,7 @@ jobs:
       - name: Set up Rust (stable + rustdoc)
         uses: dtolnay/rust-toolchain@stable
         with:
-          components: rustdoc
+          components: doc
       - name: Run rustdoc
         run: cargo doc --no-deps --target-dir site
       - name: Upload artifacts
@@ -55,7 +55,7 @@ jobs:
           path: site/doc
   deploy:
     runs-on: ubuntu-latest
-    needs: mdbook
+    needs: [mdbook, rustdoc]
     permissions:
       contents: write  # To push a branch 
       pages: write  # To push to a GitHub Pages site
