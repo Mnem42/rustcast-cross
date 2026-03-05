@@ -42,10 +42,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Set up Rust (stable + rustdoc)
+      - name: Set up Rust (stable)
         uses: dtolnay/rust-toolchain@stable
-        with:
-          components: doc
       - name: Run rustdoc
         run: cargo doc --no-deps --target-dir site
       - name: Upload artifacts
