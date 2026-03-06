@@ -1,4 +1,4 @@
-name: MDBook (dev)
+name: Github pages (dev)
 on:
   push:
     branches:
