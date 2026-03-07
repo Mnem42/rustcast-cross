@@ -1,6 +1,6 @@
 <!-- Header -->
 <p align="center">
-  <img src="docs/icon.png" width="128" height="128" alt="RustCast icon" />
+  <img src="assets/icon/icon.svg" width="128" height="128" alt="rustcast-cross icon" />
 </p>
 
 <h1 align="center">rustcast-cross</h1>
@@ -22,7 +22,7 @@ RustCast, Raycast and PowerToys Run are productivity tools. They provide a popup
 search bar that people can use to do many things, like opening apps,
 calculators, quick-notes, etc.
 
-**Community:** https://discord.gg/bDfNYPbnC5
+**Community:** https://discord.gg/bDfNYPbnC5 (rustcast-cross channel)
 
 ## Why does this fork exist?
 
@@ -31,9 +31,6 @@ meant to have that.
 
 It'll probably be less polished than the main repo, at least in the short term, and they probably
 *won't* have perfect feature parity by any means, since that's just not all that important.
-
-
-![RustCast Demo PreRelease V1](./docs/rustcast-v0-5-0.png)
 
 ## Supported platforms
 
