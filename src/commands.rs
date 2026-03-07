@@ -36,7 +36,7 @@ fn sys_open(path: &str) {
     #[cfg(target_os = "macos")]
     {
         use objc2_app_kit::NSWorkspace;
-        use objc2_foundation::{NSURL, NSString};
+        use objc2_foundation::{NSString, NSURL};
         unsafe {
             let url = if path.starts_with("http") {
                 NSURL::URLWithString(&NSString::from_str(path))
@@ -87,17 +87,17 @@ impl Function {
             }
 
             Function::OpenWebsite(url) => {
-                let open_url = if url.starts_with("http") {
-                let open_url = if url.starts_with("http") {
-                    url.to_owned()
-                } else {
-                    format!("https://{url}")
+                if url.starts_with("http") {
+                    let open_url = if url.starts_with("http") {
+                        url.to_owned()
+                    } else {
+                        format!("https://{url}")
+                    };
+
+                    // Should never get here without it being validated first
+                    open::that(open_url).unwrap();
                 };
-
-                // Should never get here without it being validated first
-                open::that(open_url).unwrap();
             }
-
             Function::Calculate(expr) => {
                 Clipboard::new()
                     .unwrap()
@@ -117,8 +117,10 @@ impl Function {
             #[cfg(target_os = "macos")]
             Function::OpenPrefPane => {
                 thread::spawn(move || {
-                    let config_path = format!("{}/.config/rustcast/config.toml", 
-                        std::env::var("HOME").unwrap_or_else(|_| "".to_string()));
+                    let config_path = format!(
+                        "{}/.config/rustcast/config.toml",
+                        std::env::var("HOME").unwrap_or_else(|_| "".to_string())
+                    );
                     sys_open(&config_path);
                 });
             }
