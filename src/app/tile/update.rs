@@ -51,6 +51,8 @@ pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
                 // I do not know so much abt rendering stuff
                 #[cfg(not(target_os = "linux"))]
                 {
+                    use crate::app::menubar::menu_icon;
+
                     tile.tray_icon = Some(menu_icon(
                         #[cfg(not(target_os = "linux"))]
                         tile.hotkey,

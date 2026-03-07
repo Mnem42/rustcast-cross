@@ -41,7 +41,7 @@ fn sys_open(path: &str) {
             let url = if path.starts_with("http") {
                 NSURL::URLWithString(&NSString::from_str(path))
             } else {
-                NSURL::fileURLWithPath(&NSString::from_str(path))
+                Some(NSURL::fileURLWithPath(&NSString::from_str(path)))
             };
             if let Some(u) = url {
                 NSWorkspace::sharedWorkspace().openURL(&u);
