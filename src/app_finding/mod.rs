@@ -3,8 +3,7 @@ use std::time::Instant;
 
 use crate::{
     app::apps::SimpleApp,
-    config::Config,
-    utils::{get_config_file_path, read_config_file},
+    config::Config
 };
 use rayon::prelude::*;
 

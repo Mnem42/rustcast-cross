@@ -13,7 +13,6 @@ mod utils;
 
 use std::fs::create_dir_all;
 use std::io;
-use std::path::Path;
 
 use crate::config::Config;
 use crate::logging::init::init_loggers;
