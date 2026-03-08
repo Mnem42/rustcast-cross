@@ -1,3 +1,5 @@
+//! Functions specific to linux
+
 use std::{fs, path::Path};
 
 use freedesktop_desktop_entry::DesktopEntry;

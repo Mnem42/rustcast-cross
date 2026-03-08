@@ -1,3 +1,5 @@
+//! Functions specific to macos
+
 use crate::{app::apps::SimpleApp, config::Config, platform::macos::handle_from_icns};
 use rayon::prelude::*;
 use std::{

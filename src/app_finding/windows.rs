@@ -1,3 +1,5 @@
+//! Functions specific to windows
+
 use {
     crate::{app::apps::SimpleApp, platform::windows::get_acp},
     std::path::PathBuf,
@@ -5,8 +7,9 @@ use {
 };
 
 /// Loads apps from the registry keys `SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall` and
-/// `SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall`. `apps` has the relvant items
-/// appended to it.
+/// `SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall`.
+/// 
+/// `apps` has the relevant items appended to it.
 ///
 /// Based on <https://stackoverflow.com/questions/2864984>
 pub fn get_apps_from_registry(apps: &mut Vec<SimpleApp>) {

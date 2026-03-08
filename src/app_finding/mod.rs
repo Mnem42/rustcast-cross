@@ -1,3 +1,7 @@
+//! Abstracts over indexing apps
+//! 
+//! The "main" important function here is [`index_installed_apps`]
+
 use std::path::Path;
 use std::time::Instant;
 
@@ -82,6 +86,15 @@ fn search_dir(
         })
 }
 
+/// This indexes all the installed apps *with* logging.
+/// 
+/// # Logging
+/// 
+/// This logs with the target `indexing`.
+/// 
+/// At the `DEBUG` level, it logs when it starts and both the include and exclude paths.
+/// 
+/// It also logs the time taken to index apps at the `INFO` level.
 pub fn index_installed_apps(config: &Config) -> anyhow::Result<Vec<SimpleApp>> {
     tracing::debug!(target: "indexing", "Indexing installed apps");
     tracing::debug!(target: "indexing", "Exclude patterns: {:?}", &config.index_exclude_patterns);

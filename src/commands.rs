@@ -27,6 +27,7 @@ pub enum Function {
     Quit,
 }
 
+/// Opens a path in an editor.
 fn sys_open(path: &str) {
     #[cfg(target_os = "macos")]
     {

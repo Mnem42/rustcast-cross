@@ -1,4 +1,5 @@
 //! This handles the update logic for the tile (AKA rustcast's main window)
+
 use std::fs;
 use std::thread;
 
@@ -21,6 +22,7 @@ use crate::app_finding::index_installed_apps;
 use crate::commands::Function;
 use crate::config::Config;
 
+/// Handler for updates
 #[allow(clippy::too_many_lines)]
 pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
     tracing::trace!(target: "update", "{:?}", message);
