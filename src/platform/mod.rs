@@ -17,14 +17,22 @@ pub fn open_settings() {
     macos::open_settings()
 }
 
-/// Gets an iced image handle
+/// Gets an iced image handle.
+/// 
+/// On macos, if the path ends with `.icns`, it parses it as a `.icns` file.
+/// 
+/// In all other cases, it tries to get an iced image handle with 
+/// [`iced::widget::image::Handle::from_path`].
 pub fn get_img_handle(path: &Path) -> Option<iced::widget::image::Handle> {
     if !path.exists() {
         return None;
     }
 
+
     #[cfg(target_os = "macos")]
-    return macos::handle_from_icns(path);
+    if let Some(ext) = path.extension().unwrap() && ext == "icns" {
+        return macos::handle_from_icns(path);
+    }
 
     Some(iced::widget::image::Handle::from_path(path))
 }
