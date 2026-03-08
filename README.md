@@ -132,11 +132,9 @@ All the people who starred my repo!!
 Those who sponsor me also get a free easter egg inside RustCast, so if you want
 a free easter egg, a dollar is all you need!
 
-### Contributors
+### Contributors to this fork
 
-<a href="https://github.com/rustcast-cross/rustcast-cross/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=rustcast-cross/rustcast-cross" />
-</a>
+- [NotMega](https://github.com/iamnotmega) - Adding stuff for debian and adding some unittests
 
 ### Easter egg list
 
