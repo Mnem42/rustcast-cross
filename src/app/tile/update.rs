@@ -8,6 +8,7 @@ use iced::window;
 use rayon::slice::ParallelSliceMut;
 
 use crate::app::apps::AppData;
+use crate::app::tile::search_query;
 use crate::app::{
     ArrowKey, DEFAULT_WINDOW_HEIGHT, Message, Move, Page, WINDOW_WIDTH, apps::AppCommand,
     apps::SimpleApp, default_settings, tile::AppIndex, tile::Tile,
@@ -316,6 +317,8 @@ pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
             }
             Task::none()
         }
+        
+        Message::SearchQueryChanged(input, id) => search_query::handle_change(tile, &input, id),
 
         _ => {
             // TODO: finish this match statement
