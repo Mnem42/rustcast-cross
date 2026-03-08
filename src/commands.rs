@@ -116,6 +116,8 @@ impl Function {
             }
 
             Function::Quit => std::process::exit(0),
+            
+            #[allow(unreachable_patterns)]
             f => {
                 // TODO: something in the UI to show this
                 tracing::error!("The function {:?} is unimplemented for this platform", f);
