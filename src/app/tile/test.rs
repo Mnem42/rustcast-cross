@@ -7,9 +7,6 @@ mod tests {
 
     #[test]
     fn test_fuzzy_search_ranking() {
-        let app1 = SimpleApp::new_builtin("Firefox", "firefox", "browser", AppCommand::Display);
-        let app2 = SimpleApp::new_builtin("File Manager", "files", "explorer", AppCommand::Display);
-
         let matcher = SkimMatcherV2::default();
         let query = "ffox";
 

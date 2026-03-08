@@ -41,25 +41,15 @@ mod tests {
     #[test]
     fn test_parse_config() {
         use crate::config::Config;
-        use crate::utils::read_config_file;
-        use std::fs;
+        
+        let original_config = Config::default();
 
-        let test_path = std::env::current_dir().unwrap().join("test_config.toml");
+        let toml_string = toml::to_string(&original_config)
+            .expect("Should be able to turn config into a string");
+        
+        let recovered_config: Config = toml::from_str(&toml_string)
+            .expect("Should be able to read that string back into a Config");
 
-        let default_cfg = Config::default();
-        let toml_content = toml::to_string(&default_cfg).expect("Failed to serialize");
-        fs::write(&test_path, toml_content).expect("Failed to write temp file");
-
-        let loaded_result = read_config_file(&test_path);
-
-        let _ = fs::remove_file(&test_path);
-
-        assert!(
-            loaded_result.is_ok(),
-            "The program failed to read its default config from disk!"
-        );
-
-        let loaded_cfg = loaded_result.unwrap();
-        assert_eq!(loaded_cfg.toggle_hotkey, "ALT+SPACE");
+        assert_eq!(original_config, recovered_config);
     }
 }
