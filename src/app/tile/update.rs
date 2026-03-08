@@ -317,16 +317,6 @@ pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
             Task::none()
         }
 
-        Message::SocketMessage(msg) => {
-            if msg == "open" {
-                handle_update(tile, Message::OpenToPage(Page::Main))
-            } else if msg == "clipboard" {
-                handle_update(tile, Message::OpenToPage(Page::ClipboardHistory))
-            } else {
-                Task::none()
-            }
-        }
-
         _ => {
             // TODO: finish this match statement
             // Do nothing for now
