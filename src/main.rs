@@ -28,7 +28,7 @@ use crate::hotkey::init_hotkey_manager;
 #[cfg(target_os = "linux")]
 use crate::hotkey::init_socket;
 
-fn parse_cfg_file(path: impl AsRef<Path>) -> anyhow::Result<Config> {
+pub fn parse_cfg_file(path: impl AsRef<Path>) -> anyhow::Result<Config> {
     let config = read_config_file(path.as_ref());
     if let Err(e) = config {
         return Err(e.context("Failure to parse config"));
@@ -66,14 +66,6 @@ fn load_config() -> Config {
             Config::default()
         }
         Ok(config) => {
-            parse_cfg_file(file_path)
-                .inspect_err(|e| {
-                    preinit_logger::warn(&format!(
-                        "Failed to load config with error {e}; using default config"
-                    ));
-                })
-                .unwrap_or_default();
-
             init_loggers(&config);
             config
         }

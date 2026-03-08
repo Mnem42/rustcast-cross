@@ -2,7 +2,8 @@
 //! copying to clipboard, etc.
 use std::path::PathBuf;
 use std::process::Command;
-#[cfg(target_os = "macos")]
+
+#[cfg(any(target_os = "macos", target_os = "linux"))]
 use std::thread;
 
 use arboard::Clipboard;
@@ -28,6 +29,29 @@ pub enum Function {
     Calculate(Expr),
     OpenPrefPane,
     Quit,
+}
+
+fn sys_open(path: &str) {
+    #[cfg(target_os = "macos")]
+    {
+        use objc2_app_kit::NSWorkspace;
+        use objc2_foundation::{NSString, NSURL};
+        unsafe {
+            let url = if path.starts_with("http") {
+                NSURL::URLWithString(&NSString::from_str(path))
+            } else {
+                Some(NSURL::fileURLWithPath(&NSString::from_str(path)))
+            };
+            if let Some(u) = url {
+                NSWorkspace::sharedWorkspace().openURL(&u);
+            }
+        }
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        let _ = std::process::Command::new("xdg-open").arg(path).spawn();
+    }
 }
 
 impl Function {
@@ -62,11 +86,7 @@ impl Function {
             }
 
             Function::OpenWebsite(url) => {
-                let open_url = if url.starts_with("http") {
-                    url.to_owned()
-                } else {
-                    format!("https://{url}")
-                };
+                let open_url = url.to_owned();
 
                 // Should never get here without it being validated first
                 open::that(open_url).unwrap();
@@ -88,15 +108,14 @@ impl Function {
                 }
             },
 
-            #[cfg(target_os = "macos")]
+            #[cfg(any(target_os = "macos", target_os = "linux"))]
             Function::OpenPrefPane => {
                 thread::spawn(move || {
-                    NSWorkspace::new().openURL(&NSURL::fileURLWithPath(
-                        &objc2_foundation::NSString::from_str(
-                            &(std::env::var("HOME").unwrap_or("".to_string())
-                                + "/.config/rustcast/config.toml"),
-                        ),
-                    ));
+                    let config_path = format!(
+                        "{}/.config/rustcast/config.toml",
+                        std::env::var("HOME").unwrap_or_else(|_| "".to_string())
+                    );
+                    sys_open(&config_path);
                 });
             }
 
