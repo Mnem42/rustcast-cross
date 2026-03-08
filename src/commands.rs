@@ -87,17 +87,12 @@ impl Function {
             }
 
             Function::OpenWebsite(url) => {
-                if url.starts_with("http") {
-                    let open_url = if url.starts_with("http") {
-                        url.to_owned()
-                    } else {
-                        format!("https://{url}")
-                    };
+                    let open_url = url.to_owned();
 
                     // Should never get here without it being validated first
                     open::that(open_url).unwrap();
-                };
-            }
+                }
+
             Function::Calculate(expr) => {
                 Clipboard::new()
                     .unwrap()
