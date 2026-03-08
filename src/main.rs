@@ -66,14 +66,6 @@ fn load_config() -> Config {
             Config::default()
         }
         Ok(config) => {
-            parse_cfg_file(file_path)
-                .inspect_err(|e| {
-                    preinit_logger::warn(&format!(
-                        "Failed to load config with error {e}; using default config"
-                    ));
-                })
-                .unwrap_or_default();
-
             init_loggers(&config);
             config
         }
