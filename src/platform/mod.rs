@@ -26,6 +26,5 @@ pub fn get_img_handle(path: &Path) -> Option<iced::widget::image::Handle> {
     #[cfg(target_os = "macos")]
     return macos::handle_from_icns(path);
 
-    #[cfg(any(target_os = "windows", target_os = "linux"))]
-    return Some(iced::widget::image::Handle::from_path(path));
+    Some(iced::widget::image::Handle::from_path(path))
 }
