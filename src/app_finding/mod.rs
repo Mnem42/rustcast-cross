@@ -88,9 +88,6 @@ pub fn index_installed_apps(config: &Config) -> anyhow::Result<Vec<SimpleApp>> {
     tracing::debug!(target: "indexing", "Exclude patterns: {:?}", &config.index_exclude_patterns);
     tracing::debug!(target: "indexing", "Include patterns: {:?}", &config.index_include_patterns);
 
-    let path = get_config_file_path();
-    let config = read_config_file(path.as_path())?;
-
     if config.index_dirs.is_empty() {
         tracing::debug!(target: "indexing", "No extra index dirs provided");
     }
