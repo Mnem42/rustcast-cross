@@ -34,6 +34,10 @@ It'll probably be less polished than the main repo, at least in the short term, 
 
 ## Supported platforms
 
+> [!IMPORTANT]
+>
+> Linux support is currently broken, see [#10](https://github.com/rustcast-cross/rustcast-cross/issues/10)
+
 - **Windows**
 - **MacOS** \*
 - **Linux** \*
