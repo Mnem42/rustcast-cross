@@ -9,6 +9,8 @@ pub fn emoji_page(
     emojis: &[SimpleApp],
     focussed_id: u32,
 ) -> Element<'static, Message> {
+    tracing::trace!(target: "emoji", "Emoji apps: {emojis:?}");
+
     let emoji_vec = emojis
         .chunks(6)
         .map(<[SimpleApp]>::to_vec)

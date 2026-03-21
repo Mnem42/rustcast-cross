@@ -151,7 +151,7 @@ impl SimpleApp {
             .filter(|x| x.unicode_version() < emojis::UnicodeVersion::new(17, 13))
             .map(|x| {
                 SimpleApp::new_builtin(
-                    x.name(),
+                    x.as_str(),
                     x.name(),
                     "emoji",
                     AppCommand::Function(Function::CopyToClipboard(ClipBoardContentType::Text(
