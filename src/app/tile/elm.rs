@@ -194,36 +194,39 @@ pub fn view(tile: &Tile, wid: window::Id) -> Element<'_, Message> {
             Direction::Vertical(Scrollbar::hidden())
         };
 
-        let results = if tile.page == Page::ClipboardHistory {
-            clipboard_view(
-                &tile.clipboard_content,
-                tile.focus_id,
-                &tile.config.theme,
-                tile.focus_id,
-            )
-        } else if tile.results.is_empty() {
-            space().into()
-        } else if tile.page == Page::EmojiSearch {
-            let results: Vec<_> = tile
-                .emoji_apps
-                .search_prefix(&tile.query_lc)
-                .map(std::borrow::ToOwned::to_owned)
-                .collect();
+        let results = match &tile.page {
+            Page::ClipboardHistory => {
+                clipboard_view(
+                    &tile.clipboard_content,
+                    tile.focus_id,
+                    &tile.config.theme,
+                    tile.focus_id,
+                )
+            },
+            _ if tile.results.is_empty() => space().into(),
+            Page::EmojiSearch => {
+                let results: Vec<_> = tile
+                    .emoji_apps
+                    .search_prefix(&tile.query_lc)
+                    .map(std::borrow::ToOwned::to_owned)
+                    .collect();
 
-            emoji_page(tile.config.theme.clone(), &results, tile.focus_id)
-        } else {
-            container(
-                tile.results
-                    .iter()
-                    .enumerate()
-                    .map(|(i, app)| {
-                        #[allow(clippy::cast_possible_truncation)]
-                        app.clone()
-                            .render(tile.config.theme.clone(), i as u32, tile.focus_id)
-                    })
-                    .collect::<Column<_>>(),
-            )
-            .into()
+                emoji_page(tile.config.theme.clone(), &results, tile.focus_id)
+            },
+            Page::Main => {
+                container(
+                    tile.results
+                        .iter()
+                        .enumerate()
+                        .map(|(i, app)| {
+                            #[allow(clippy::cast_possible_truncation)]
+                            app.clone()
+                                .render(tile.config.theme.clone(), i as u32, tile.focus_id)
+                        })
+                        .collect::<Column<_>>(),
+                )
+                .into()
+            }
         };
 
         let results_count = match &tile.page {
