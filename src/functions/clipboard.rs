@@ -38,17 +38,12 @@ impl ClipBoardContentType {
 }
 
 impl PartialEq for ClipBoardContentType {
-    /// Let cliboard items be comparable
+    /// Let clipboard items be comparable
     fn eq(&self, other: &Self) -> bool {
-        if let Self::Text(a) = self
-            && let Self::Text(b) = other
-        {
-            return a == b;
-        } else if let Self::Image(image_data) = self
-            && let Self::Image(other_image_data) = other
-        {
-            return image_data.bytes == other_image_data.bytes;
+        match (self, other) {
+            (Self::Text(a), Self::Text(b)) => a == b,
+            (Self::Image(a), Self::Image(b)) => a.bytes == b.bytes,
+            _ => false
         }
-        false
     }
 }
