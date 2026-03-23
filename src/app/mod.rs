@@ -91,12 +91,3 @@ pub fn default_settings() -> Settings {
         ..Default::default()
     }
 }
-
-//            Message::ReloadConfig => {
-//                self.config = toml::from_str(
-//                    &fs::read_to_string(get_config_file_path()).unwrap_or("".to_owned()),
-//                )
-//                .unwrap();
-//
-//                Task::none()
-//            }
