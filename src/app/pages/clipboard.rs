@@ -39,7 +39,7 @@ impl ClipboardState {
         tracing::trace!(target: "clipboard_page", "Adding item {item:?} to clipboard {self:?}");
 
         if self.content.len() < 50 {
-            self.content.push_back(item);
+            self.content.push_front(item);
             true
         }
         else {
