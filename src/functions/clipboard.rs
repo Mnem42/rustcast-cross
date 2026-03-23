@@ -1,10 +1,10 @@
 //! This has all the logic regarding the cliboard history
 use arboard::ImageData;
-use iced::widget::{Button, Text, text::Wrapping};
+use iced::{Length::Fill, widget::{Button, Text, text::Wrapping}};
 
 use crate::{
     app::{Message, apps::{AppCommand, SimpleApp}},
-    commands::Function,
+    commands::Function, styles::result_button_style,
 };
 
 /// The kinds of clipboard content that rustcast can handle and their contents
@@ -17,7 +17,7 @@ pub enum ClipboardContent {
 impl ClipboardContent {
     /// Returns the iced element for rendering the clipboard item, and the entire content since the
     /// display name is only the first line
-    pub fn render<'a>(&'a self, theme: &crate::config::Theme) -> iced::Element<'a, Message> {
+    pub fn render<'a>(&'a self, theme: &'a crate::config::Theme) -> iced::Element<'a, Message> {
         let mut text = match self {
             ClipboardContent::Image(_) => "<img>".to_string(),
             ClipboardContent::Text(a) => a.to_owned(),
@@ -34,6 +34,9 @@ impl ClipboardContent {
 
         Button::new(text)
             .on_press(Message::CopyToClipboard(self.clone())) // shhhhhh
+            .style(move |_, _| result_button_style(&theme))
+            .width(Fill)
+            .padding(0)
             .into()
     }
 }

@@ -65,7 +65,7 @@ impl ClipboardState {
 pub fn render<'a>(
     state: &'a ClipboardState,
     focussed_id: u32,
-    theme: &Theme
+    theme: &'a Theme
 ) -> Element<'a, Message> {
     let theme_clone = theme.clone();
     let theme_clone_2 = theme.clone();
