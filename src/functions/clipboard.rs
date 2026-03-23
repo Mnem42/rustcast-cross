@@ -1,8 +1,9 @@
 //! This has all the logic regarding the cliboard history
 use arboard::ImageData;
+use iced::widget::{Button, Text, text::Wrapping};
 
 use crate::{
-    app::apps::{AppCommand, SimpleApp},
+    app::{Message, apps::{AppCommand, SimpleApp}},
     commands::Function,
 };
 
@@ -16,24 +17,24 @@ pub enum ClipboardContent {
 impl ClipboardContent {
     /// Returns the iced element for rendering the clipboard item, and the entire content since the
     /// display name is only the first line
-    pub fn to_app(&self) -> SimpleApp {
-        let mut name = match self {
+    pub fn render<'a>(&'a self, theme: &crate::config::Theme) -> iced::Element<'a, Message> {
+        let mut text = match self {
             ClipboardContent::Image(_) => "<img>".to_string(),
             ClipboardContent::Text(a) => a.to_owned(),
         };
 
-        let self_clone = self.clone();
-        let name_lc = name.clone();
-
         // only get the first line from the contents
-        name = name.lines().next().unwrap_or("").to_string();
+        text = text.lines().next().unwrap_or("").to_string();
 
-        SimpleApp::new_builtin(
-            &name,
-            &name_lc,
-            "Clipboard Item",
-            AppCommand::Function(Function::CopyToClipboard(self_clone.clone())),
-        )
+        let text = Text::new(text)
+            .font(theme.font())
+            .size(16)
+            .wrapping(Wrapping::None)
+            .color(theme.text_color(1.0));
+
+        Button::new(text)
+            .on_press(Message::CopyToClipboard(self.clone())) // shhhhhh
+            .into()
     }
 }
 

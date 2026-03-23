@@ -96,16 +96,24 @@ fn main() -> iced::Result {
 
     iced::daemon(
         move || {
-            tile::elm::new(
+            let res = tile::elm::new(
                 #[cfg(not(target_os = "linux"))]
                 show_hide_bind,
                 &config,
-            )
+            );
+
+            match res {
+                Err(e) => {
+                    tracing::error!(target: "init", "Error initing elm: {e}");
+                    std::process::exit(1)
+                }
+                Ok(tile) => tile
+            }
         },
         tile::update::handle_update,
         tile::elm::view,
     )
-    .subscription(Tile::subscription)
-    .theme(Tile::theme)
-    .run()
+        .subscription(Tile::subscription)
+        .theme(Tile::theme)
+        .run()
 }

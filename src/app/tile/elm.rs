@@ -15,8 +15,8 @@ use rayon::slice::ParallelSliceMut;
 
 #[cfg(target_os = "windows")]
 use crate::app;
-use crate::app::WINDOW_WIDTH;
-use crate::app::pages::clipboard::{ClipboardState, clipboard_view};
+use crate::app::{WINDOW_WIDTH, pages};
+use crate::app::pages::clipboard::{ClipboardState, render};
 use crate::app::pages::emoji::emoji_page;
 use crate::app::tile::AppIndex;
 use crate::app_finding::index_installed_apps;
@@ -75,7 +75,7 @@ pub fn default_app_paths() -> Vec<String> {
 pub fn new(
     #[cfg(not(target_os = "linux"))] hotkey: HotKey,
     config: &Config,
-) -> (Tile, Task<Message>) {
+) -> anyhow::Result<(Tile, Task<Message>)> {
     tracing::trace!(target: "elm_init", "Initing ELM");
 
     #[allow(unused_mut)]
@@ -126,7 +126,7 @@ pub fn new(
     options.par_sort_by_key(|x| x.name.len());
     let options = AppIndex::from_apps(options);
 
-    (
+    Ok((
         Tile {
             query: String::new(),
             query_lc: String::new(),
@@ -138,7 +138,7 @@ pub fn new(
             focused: false,
             config: config.clone(),
             theme: config.theme.clone().into(),
-            clipboard_state: ClipboardState::default(),
+            clipboard_state: ClipboardState::new()?,
             tray_icon: None,
             sender: None,
             page: Page::Main,
@@ -163,7 +163,7 @@ pub fn new(
                 .and_then(|x| x.parse::<HotKey>().ok()),
         },
         open,
-    )
+    ))
 }
 
 pub fn view(tile: &Tile, wid: window::Id) -> Element<'_, Message> {
@@ -196,11 +196,10 @@ pub fn view(tile: &Tile, wid: window::Id) -> Element<'_, Message> {
 
         let results = match &tile.page {
             Page::ClipboardHistory => {
-                clipboard_view(
+                pages::clipboard::render(
                     &tile.clipboard_state,
                     tile.focus_id,
-                    &tile.config.theme,
-                    tile.focus_id,
+                    &tile.config.theme
                 )
             },
             _ if tile.results.is_empty() => space().into(),
