@@ -10,7 +10,7 @@ use arboard::Clipboard;
 
 use crate::utils::open_application;
 use crate::{
-    config::Config, functions::calculator::Expr, functions::clipboard::ClipBoardContentType,
+    config::Config, functions::calculator::Expr, functions::clipboard::ClipboardContent,
 };
 
 /// The different functions that rustcast can perform
@@ -20,7 +20,7 @@ pub enum Function {
     RunShellCommand(String, String),
     OpenWebsite(String),
     RandomVar(i32), // Easter egg function
-    CopyToClipboard(ClipBoardContentType),
+    CopyToClipboard(ClipboardContent),
     GoogleSearch(String),
     Calculate(Expr),
     OpenPrefPane,
@@ -98,10 +98,10 @@ impl Function {
             }
 
             Function::CopyToClipboard(clipboard_content) => match clipboard_content {
-                ClipBoardContentType::Text(text) => {
+                ClipboardContent::Text(text) => {
                     Clipboard::new().unwrap().set_text(text).ok();
                 }
-                ClipBoardContentType::Image(img) => {
+                ClipboardContent::Image(img) => {
                     Clipboard::new().unwrap().set_image(img.to_owned_img()).ok();
                 }
             },

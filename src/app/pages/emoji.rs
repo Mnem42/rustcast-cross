@@ -1,7 +1,7 @@
 use iced::{Border, Length::Fill, border::Radius, widget::tooltip};
 
 use crate::{
-    app::pages::prelude::*, commands::Function, functions::clipboard::ClipBoardContentType,
+    app::pages::prelude::*, commands::Function, functions::clipboard::ClipboardContent,
 };
 
 pub fn emoji_page(
@@ -41,7 +41,7 @@ pub fn emoji_page(
                         .width(70)
                         .height(70)
                         .on_press(Message::RunFunction(Function::CopyToClipboard(
-                            ClipBoardContentType::Text(emoji.name),
+                            ClipboardContent::Text(emoji.name),
                         )))
                         .style(move |_, _| emoji_button_style(&value)),
                 )

@@ -28,7 +28,7 @@ use global_hotkey::{GlobalHotKeyEvent, HotKeyState, hotkey::HotKey};
 use crate::{
     app::{ArrowKey, Message, Move, Page, apps::SimpleApp, pages::clipboard::ClipboardState, tile::elm::default_app_paths},
     config::Config,
-    functions::clipboard::ClipBoardContentType,
+    functions::clipboard::ClipboardContent,
     platform::open_settings,
 };
 
@@ -411,13 +411,13 @@ impl Tile {
     fn handle_clipboard_history() -> impl futures::Stream<Item = Message> {
         stream::channel(100, async |mut output| {
             let mut clipboard = Clipboard::new().unwrap();
-            let mut prev_byte_rep: Option<ClipBoardContentType> = None;
+            let mut prev_byte_rep: Option<ClipboardContent> = None;
 
             loop {
                 let byte_rep = if let Ok(a) = clipboard.get_image() {
-                    Some(ClipBoardContentType::Image(a))
+                    Some(ClipboardContent::Image(a))
                 } else if let Ok(a) = clipboard.get_text() {
-                    Some(ClipBoardContentType::Text(a))
+                    Some(ClipboardContent::Text(a))
                 } else {
                     None
                 };

@@ -3,7 +3,7 @@
 use crate::commands::Function;
 use iced::window::{self, Id, Settings};
 
-use crate::{app::tile::ExtSender, functions::clipboard::ClipBoardContentType};
+use crate::{app::tile::ExtSender, functions::clipboard::ClipboardContent};
 
 pub mod apps;
 pub mod menubar;
@@ -65,7 +65,7 @@ pub enum Message {
     ReloadConfig,
     SetSender(ExtSender),
     SwitchToPage(Page),
-    ClipboardHistory(ClipBoardContentType),
+    ClipboardHistory(ClipboardContent),
     ChangeFocus(ArrowKey),
 }
 

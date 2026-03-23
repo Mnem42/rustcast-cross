@@ -5,18 +5,18 @@ use iced::widget::{
     scrollable::{Direction, Scrollbar},
 };
 
-use crate::{app::pages::prelude::*, functions::clipboard::ClipBoardContentType};
+use crate::{app::pages::prelude::*, functions::clipboard::ClipboardContent};
 
 #[derive(Debug, Default)]
 pub struct ClipboardState {
-    content: VecDeque<ClipBoardContentType>
+    content: VecDeque<ClipboardContent>
 }
 
 impl ClipboardState {
     /// Adds an item to the clipboard.
     /// 
     /// The return value is `true` if no item was added (cap reached), and `false` if it wasn't.
-    pub fn add_item(&mut self, item: ClipBoardContentType) -> bool {
+    pub fn add_item(&mut self, item: ClipboardContent) -> bool {
         if self.content.len() < 50 {
             self.content.push_back(item);
             true
