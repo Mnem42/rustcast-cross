@@ -16,7 +16,7 @@ use rayon::slice::ParallelSliceMut;
 #[cfg(target_os = "windows")]
 use crate::app;
 use crate::app::WINDOW_WIDTH;
-use crate::app::pages::clipboard::clipboard_view;
+use crate::app::pages::clipboard::{ClipboardState, clipboard_view};
 use crate::app::pages::emoji::emoji_page;
 use crate::app::tile::AppIndex;
 use crate::app_finding::index_installed_apps;
@@ -138,7 +138,7 @@ pub fn new(
             focused: false,
             config: config.clone(),
             theme: config.theme.clone().into(),
-            clipboard_content: vec![],
+            clipboard_state: ClipboardState::default(),
             tray_icon: None,
             sender: None,
             page: Page::Main,
@@ -170,7 +170,7 @@ pub fn view(tile: &Tile, wid: window::Id) -> Element<'_, Message> {
     if tile.visible {
         let round_bottom_edges = match &tile.page {
             Page::Main | Page::EmojiSearch => tile.results.is_empty(),
-            Page::ClipboardHistory => tile.clipboard_content.is_empty(),
+            Page::ClipboardHistory => tile.clipboard_state.len() > 0,
         };
         let title_input = text_input(tile.config.placeholder.as_str(), &tile.query)
             .on_input(move |a| Message::SearchQueryChanged(a, wid))
@@ -197,7 +197,7 @@ pub fn view(tile: &Tile, wid: window::Id) -> Element<'_, Message> {
         let results = match &tile.page {
             Page::ClipboardHistory => {
                 clipboard_view(
-                    &tile.clipboard_content,
+                    &tile.clipboard_state,
                     tile.focus_id,
                     &tile.config.theme,
                     tile.focus_id,
@@ -230,7 +230,7 @@ pub fn view(tile: &Tile, wid: window::Id) -> Element<'_, Message> {
         };
 
         let results_count = match &tile.page {
-            Page::ClipboardHistory => tile.clipboard_content.len(),
+            Page::ClipboardHistory => tile.clipboard_state.len(),
             Page::Main | Page::EmojiSearch => tile.results.len(),
         };
 
