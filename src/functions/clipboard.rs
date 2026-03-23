@@ -1,10 +1,17 @@
 //! This has all the logic regarding the cliboard history
 use arboard::ImageData;
-use iced::{Length::Fill, widget::{Button, Text, text::Wrapping}};
+use iced::{
+    Length::Fill,
+    widget::{Button, Text, text::Wrapping},
+};
 
 use crate::{
-    app::{Message, apps::{AppCommand, SimpleApp}},
-    commands::Function, styles::result_button_style,
+    app::{
+        Message,
+        apps::{AppCommand, SimpleApp},
+    },
+    commands::Function,
+    styles::result_button_style,
 };
 
 /// The kinds of clipboard content that rustcast can handle and their contents
@@ -47,7 +54,7 @@ impl PartialEq for ClipboardContent {
         match (self, other) {
             (Self::Text(a), Self::Text(b)) => a == b,
             (Self::Image(a), Self::Image(b)) => a.bytes == b.bytes,
-            _ => false
+            _ => false,
         }
     }
 }

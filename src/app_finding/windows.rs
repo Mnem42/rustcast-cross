@@ -8,7 +8,7 @@ use {
 
 /// Loads apps from the registry keys `SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall` and
 /// `SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall`.
-/// 
+///
 /// `apps` has the relevant items appended to it.
 ///
 /// Based on <https://stackoverflow.com/questions/2864984>

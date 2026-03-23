@@ -1,8 +1,6 @@
 use iced::{Border, Length::Fill, border::Radius, widget::tooltip};
 
-use crate::{
-    app::pages::prelude::*, commands::Function, functions::clipboard::ClipboardContent,
-};
+use crate::{app::pages::prelude::*, commands::Function, functions::clipboard::ClipboardContent};
 
 pub fn emoji_page(
     tile_theme: Theme,
