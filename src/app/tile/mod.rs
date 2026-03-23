@@ -26,7 +26,7 @@ use iced::{
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState, hotkey::HotKey};
 
 use crate::{
-    app::{ArrowKey, Message, Move, Page, apps::SimpleApp, tile::elm::default_app_paths},
+    app::{ArrowKey, Message, Move, Page, apps::SimpleApp, pages::clipboard::ClipboardState, tile::elm::default_app_paths},
     config::Config,
     functions::clipboard::ClipBoardContentType,
     platform::open_settings,
@@ -92,7 +92,7 @@ impl AppIndex {
 /// - Open Hotkey ID (`u32`) the id of the hotkey that opens the window
 /// - Clipboard Content (`Vec<`[`ClipBoardContentType`]`>`) all of the cliboard contents
 /// - Page ([`Page`]) the current page of the window (main or clipboard history)
-#[derive(Clone)]
+//#[derive()]
 pub struct Tile {
     pub theme: iced::Theme,
     pub focus_id: u32,
@@ -111,12 +111,14 @@ pub struct Tile {
     /// The opening hotkey
     #[cfg(not(target_os = "linux"))]
     hotkey: HotKey,
-    #[cfg(not(target_os = "linux"))]
-    clipboard_hotkey: Option<HotKey>,
-    clipboard_content: Vec<ClipBoardContentType>,
+
     tray_icon: Option<TrayIcon>,
     sender: Option<ExtSender>,
     page: Page,
+
+    #[cfg(not(target_os = "linux"))]
+    clipboard_hotkey: Option<HotKey>,
+    clipboard_state: ClipboardState
 }
 
 impl Tile {

@@ -103,7 +103,7 @@ pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
             #[allow(clippy::cast_possible_truncation)]
             // No, there won't be more than 2^32-1 items in a list
             let len = match tile.page {
-                Page::ClipboardHistory => tile.clipboard_content.len() as u32,
+                Page::ClipboardHistory => tile.clipboard_state.len() as u32,
                 Page::EmojiSearch => tile.emoji_apps.search_prefix(&tile.query_lc).count() as u32, // or tile.results.len()
                 Page::Main => tile.results.len() as u32,
             };
@@ -311,12 +311,7 @@ pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
         }
 
         Message::ClipboardHistory(text) => {
-            tile.clipboard_content.insert(0, text);
-
-            // Length limit for clipboard content list
-            if tile.clipboard_content.len() > 50 {
-                tile.clipboard_content.pop();
-            }
+            tile.clipboard_state.add_item(text);
             Task::none()
         }
         

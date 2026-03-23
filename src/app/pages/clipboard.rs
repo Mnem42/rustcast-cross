@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use iced::widget::{
     Scrollable, scrollable,
     scrollable::{Direction, Scrollbar},
@@ -5,8 +7,33 @@ use iced::widget::{
 
 use crate::{app::pages::prelude::*, functions::clipboard::ClipBoardContentType};
 
+#[derive(Debug, Default)]
+pub struct ClipboardState {
+    content: VecDeque<ClipBoardContentType>
+}
+
+impl ClipboardState {
+    /// Adds an item to the clipboard.
+    /// 
+    /// The return value is `true` if no item was added (cap reached), and `false` if it wasn't.
+    pub fn add_item(&mut self, item: ClipBoardContentType) -> bool {
+        if self.content.len() < 50 {
+            self.content.push_back(item);
+            true
+        }
+        else {
+            false
+        }
+    }
+
+    /// Gets the number of items stored in the clipboard
+    pub fn len(&self) -> usize {
+        self.content.len()
+    }
+}
+
 pub fn clipboard_view(
-    clipboard_content: &[ClipBoardContentType],
+    state: &ClipboardState,
     focussed_id: u32,
     theme: &Theme,
     focus_id: u32,
@@ -16,7 +43,7 @@ pub fn clipboard_view(
     container(Row::from_vec(vec![
         container(
             scrollable(
-                clipboard_content
+                state.content
                     .iter()
                     .enumerate()
                     .map(|(i, content)| {
@@ -34,7 +61,7 @@ pub fn clipboard_view(
         .into(),
         container(Scrollable::with_direction(
             Text::new(
-                clipboard_content
+                state.content
                     .get(focussed_id as usize)
                     .map(|x| x.to_app().alias)
                     .unwrap_or_default(),
