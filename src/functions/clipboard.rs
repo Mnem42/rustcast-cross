@@ -6,11 +6,7 @@ use iced::{
 };
 
 use crate::{
-    app::{
-        Message,
-        apps::{AppCommand, SimpleApp},
-    },
-    commands::Function,
+    app::Message,
     styles::result_button_style,
 };
 
@@ -41,7 +37,7 @@ impl ClipboardContent {
 
         Button::new(text)
             .on_press(Message::CopyToClipboard(self.clone())) // shhhhhh
-            .style(move |_, _| result_button_style(&theme))
+            .style(move |_, _| result_button_style(theme))
             .width(Fill)
             .padding(0)
             .into()
