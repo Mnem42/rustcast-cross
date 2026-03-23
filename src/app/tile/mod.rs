@@ -447,12 +447,8 @@ impl Tile {
             output.send(msg).await.expect("Sender not sent");
             loop {
                 let abcd = recipient
-                    .try_next()
-                    .map(async |msg| {
-                        if let Some(msg) = msg {
-                            output.send(msg).await.unwrap();
-                        }
-                    })
+                    .try_recv()
+                    .map(async |msg| { output.send(msg).await.unwrap(); })
                     .ok();
 
                 if let Some(abcd) = abcd {
