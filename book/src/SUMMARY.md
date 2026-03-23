@@ -2,6 +2,7 @@
 [Contributing](contributing.md)
 [Changelog](changelog.md)
 
+- [Compiling from source](compiling.md)
 - [Configuration](config/index.md)
   - [Modes](config/modes.md)
   - [Shells](config/shells.md)
