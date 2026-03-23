@@ -314,6 +314,15 @@ pub fn handle_update(tile: &mut Tile, message: Message) -> Task<Message> {
             tile.clipboard_state.add_item(text);
             Task::none()
         }
+        Message::CopyToClipboard(item) => {
+            let res = tile.clipboard_state.write_to_clipboard(&item);
+
+            if let Err(e) = res {
+                tracing::error!("Error writing to clipboard: {e}");
+            }
+
+            Task::none()
+        }
         
         Message::SearchQueryChanged(input, id) => search_query::handle_change(tile, &input, id),
 

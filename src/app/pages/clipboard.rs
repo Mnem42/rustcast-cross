@@ -1,4 +1,5 @@
 use std::collections::VecDeque;
+use std::fmt::Debug;
 
 use iced::widget::{
     Scrollable, scrollable,
@@ -7,16 +8,36 @@ use iced::widget::{
 
 use crate::{app::pages::prelude::*, functions::clipboard::ClipboardContent};
 
-#[derive(Debug, Default)]
 pub struct ClipboardState {
+    clipboard: arboard::Clipboard,
     content: VecDeque<ClipboardContent>
 }
 
+impl Debug for ClipboardState {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "ClipboardState {{ content: {:?} }}", self.content)
+    }
+}
+
 impl ClipboardState {
+    /// Inits the state.
+    /// 
+    /// # Errors
+    /// 
+    /// If there was an error initing the underlying [`arboard::Clipboard`].
+    pub fn new() -> Result<Self, arboard::Error> {
+        Ok(Self {
+            clipboard: arboard::Clipboard::new()?,
+            content: VecDeque::default()
+        })
+    }
+
     /// Adds an item to the clipboard.
     /// 
     /// The return value is `true` if no item was added (cap reached), and `false` if it wasn't.
     pub fn add_item(&mut self, item: ClipboardContent) -> bool {
+        tracing::trace!(target: "clipboard_page", "Adding item {item:?} to clipboard {self:?}");
+
         if self.content.len() < 50 {
             self.content.push_back(item);
             true
@@ -30,14 +51,22 @@ impl ClipboardState {
     pub fn len(&self) -> usize {
         self.content.len()
     }
+
+    
+    /// Writes the item to the device clipboard
+    pub fn write_to_clipboard(&mut self, item: &ClipboardContent) -> Result<(), arboard::Error> {
+        match item {
+            ClipboardContent::Text(text) => self.clipboard.set_text(text),
+            ClipboardContent::Image(image) => self.clipboard.set_image(image.clone()) // Think the clone is needed
+        }
+    }
 }
 
-pub fn clipboard_view(
-    state: &ClipboardState,
+pub fn render<'a>(
+    state: &'a ClipboardState,
     focussed_id: u32,
-    theme: &Theme,
-    focus_id: u32,
-) -> Element<'static, Message> {
+    theme: &Theme
+) -> Element<'a, Message> {
     let theme_clone = theme.clone();
     let theme_clone_2 = theme.clone();
     container(Row::from_vec(vec![
@@ -47,9 +76,11 @@ pub fn clipboard_view(
                     .iter()
                     .enumerate()
                     .map(|(i, content)| {
+                        tracing::trace!(target: "render", "Drawing clipboard item index {i}: {content:?}");
+
                         // I'd be surprised if you get 4 billion entries
                         #[allow(clippy::cast_possible_truncation)]
-                        content.to_app().render(theme.clone(), i as u32, focus_id)
+                        content.render(theme)
                     })
                     .collect::<Column<_>>()
                     .width(WINDOW_WIDTH / 3.),
@@ -63,7 +94,7 @@ pub fn clipboard_view(
             Text::new(
                 state.content
                     .get(focussed_id as usize)
-                    .map(|x| x.to_app().alias)
+                    .map(|x| if let ClipboardContent::Text(text) = x { text } else { "img" })
                     .unwrap_or_default(),
             )
             .height(385)
