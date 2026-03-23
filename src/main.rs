@@ -17,7 +17,7 @@ use std::path::Path;
 
 use crate::config::Config;
 use crate::logging::init::init_loggers;
-use crate::utils::{get_config_file_path, get_config_installation_dir };
+use crate::utils::{get_config_file_path, get_config_installation_dir};
 
 use crate::app::tile::{self, Tile};
 use logging::preinit_logger;
@@ -107,13 +107,13 @@ fn main() -> iced::Result {
                     tracing::error!(target: "init", "Error initing elm: {e}");
                     std::process::exit(1)
                 }
-                Ok(tile) => tile
+                Ok(tile) => tile,
             }
         },
         tile::update::handle_update,
         tile::elm::view,
     )
-        .subscription(Tile::subscription)
-        .theme(Tile::theme)
-        .run()
+    .subscription(Tile::subscription)
+    .theme(Tile::theme)
+    .run()
 }

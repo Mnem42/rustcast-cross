@@ -1,5 +1,5 @@
 //! Parser for include patterns
-//! 
+//!
 //! This is in the format `<path>[:<max depth>]`.
 
 use std::{path::PathBuf, str::FromStr, sync::LazyLock};

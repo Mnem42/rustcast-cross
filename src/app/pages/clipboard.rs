@@ -10,7 +10,7 @@ use crate::{app::pages::prelude::*, functions::clipboard::ClipboardContent};
 
 pub struct ClipboardState {
     clipboard: arboard::Clipboard,
-    content: VecDeque<ClipboardContent>
+    content: VecDeque<ClipboardContent>,
 }
 
 impl Debug for ClipboardState {
@@ -21,19 +21,19 @@ impl Debug for ClipboardState {
 
 impl ClipboardState {
     /// Inits the state.
-    /// 
+    ///
     /// # Errors
-    /// 
+    ///
     /// If there was an error initing the underlying [`arboard::Clipboard`].
     pub fn new() -> Result<Self, arboard::Error> {
         Ok(Self {
             clipboard: arboard::Clipboard::new()?,
-            content: VecDeque::default()
+            content: VecDeque::default(),
         })
     }
 
     /// Adds an item to the clipboard.
-    /// 
+    ///
     /// The return value is `true` if no item was added (cap reached), and `false` if it wasn't.
     pub fn add_item(&mut self, item: ClipboardContent) -> bool {
         tracing::trace!(target: "clipboard_page", "Adding item {item:?} to clipboard {self:?}");
@@ -41,8 +41,7 @@ impl ClipboardState {
         if self.content.len() < 50 {
             self.content.push_front(item);
             true
-        }
-        else {
+        } else {
             false
         }
     }
@@ -52,12 +51,11 @@ impl ClipboardState {
         self.content.len()
     }
 
-    
     /// Writes the item to the device clipboard
     pub fn write_to_clipboard(&mut self, item: &ClipboardContent) -> Result<(), arboard::Error> {
         match item {
             ClipboardContent::Text(text) => self.clipboard.set_text(text),
-            ClipboardContent::Image(image) => self.clipboard.set_image(image.clone()) // Think the clone is needed
+            ClipboardContent::Image(image) => self.clipboard.set_image(image.clone()), // Think the clone is needed
         }
     }
 }
@@ -65,7 +63,7 @@ impl ClipboardState {
 pub fn render<'a>(
     state: &'a ClipboardState,
     focussed_id: u32,
-    theme: &'a Theme
+    theme: &'a Theme,
 ) -> Element<'a, Message> {
     let theme_clone = theme.clone();
     let theme_clone_2 = theme.clone();

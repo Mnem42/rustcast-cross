@@ -26,7 +26,10 @@ use iced::{
 use global_hotkey::{GlobalHotKeyEvent, HotKeyState, hotkey::HotKey};
 
 use crate::{
-    app::{ArrowKey, Message, Move, Page, apps::SimpleApp, pages::clipboard::ClipboardState, tile::elm::default_app_paths},
+    app::{
+        ArrowKey, Message, Move, Page, apps::SimpleApp, pages::clipboard::ClipboardState,
+        tile::elm::default_app_paths,
+    },
     config::Config,
     functions::clipboard::ClipboardContent,
     platform::open_settings,
@@ -118,7 +121,7 @@ pub struct Tile {
 
     #[cfg(not(target_os = "linux"))]
     clipboard_hotkey: Option<HotKey>,
-    clipboard_state: ClipboardState
+    clipboard_state: ClipboardState,
 }
 
 impl Tile {

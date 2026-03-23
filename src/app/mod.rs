@@ -67,7 +67,7 @@ pub enum Message {
     SwitchToPage(Page),
     ClipboardHistory(ClipboardContent),
     ChangeFocus(ArrowKey),
-    CopyToClipboard(ClipboardContent)
+    CopyToClipboard(ClipboardContent),
 }
 
 /// The window settings for rustcast

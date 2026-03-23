@@ -15,10 +15,10 @@ use rayon::slice::ParallelSliceMut;
 
 #[cfg(target_os = "windows")]
 use crate::app;
-use crate::app::{WINDOW_WIDTH, pages};
 use crate::app::pages::clipboard::{ClipboardState, render};
 use crate::app::pages::emoji::emoji_page;
 use crate::app::tile::AppIndex;
+use crate::app::{WINDOW_WIDTH, pages};
 use crate::app_finding::index_installed_apps;
 use crate::config::Theme;
 use crate::styles::{contents_style, rustcast_text_input_style, tint, with_alpha};
@@ -196,12 +196,8 @@ pub fn view(tile: &Tile, wid: window::Id) -> Element<'_, Message> {
 
         let results = match &tile.page {
             Page::ClipboardHistory => {
-                pages::clipboard::render(
-                    &tile.clipboard_state,
-                    tile.focus_id,
-                    &tile.config.theme
-                )
-            },
+                pages::clipboard::render(&tile.clipboard_state, tile.focus_id, &tile.config.theme)
+            }
             _ if tile.results.is_empty() => space().into(),
             Page::EmojiSearch => {
                 let results: Vec<_> = tile
@@ -211,21 +207,19 @@ pub fn view(tile: &Tile, wid: window::Id) -> Element<'_, Message> {
                     .collect();
 
                 emoji_page(tile.config.theme.clone(), &results, tile.focus_id)
-            },
-            Page::Main => {
-                container(
-                    tile.results
-                        .iter()
-                        .enumerate()
-                        .map(|(i, app)| {
-                            #[allow(clippy::cast_possible_truncation)]
-                            app.clone()
-                                .render(tile.config.theme.clone(), i as u32, tile.focus_id)
-                        })
-                        .collect::<Column<_>>(),
-                )
-                .into()
             }
+            Page::Main => container(
+                tile.results
+                    .iter()
+                    .enumerate()
+                    .map(|(i, app)| {
+                        #[allow(clippy::cast_possible_truncation)]
+                        app.clone()
+                            .render(tile.config.theme.clone(), i as u32, tile.focus_id)
+                    })
+                    .collect::<Column<_>>(),
+            )
+            .into(),
         };
 
         let results_count = match &tile.page {
