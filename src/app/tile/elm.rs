@@ -15,7 +15,7 @@ use rayon::slice::ParallelSliceMut;
 
 #[cfg(target_os = "windows")]
 use crate::app;
-use crate::app::pages::clipboard::{ClipboardState, render};
+use crate::app::pages::clipboard::ClipboardState;
 use crate::app::pages::emoji::emoji_page;
 use crate::app::tile::AppIndex;
 use crate::app::{WINDOW_WIDTH, pages};
