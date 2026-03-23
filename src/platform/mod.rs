@@ -29,9 +29,7 @@ pub fn get_img_handle(path: &Path) -> Option<iced::widget::image::Handle> {
     }
 
     #[cfg(target_os = "macos")]
-    if let Some(ext) = path.extension().unwrap()
-        && ext == "icns"
-    {
+    if let Some(ext) = path.extension() && ext == "icns"{
         return macos::handle_from_icns(path);
     }
 
