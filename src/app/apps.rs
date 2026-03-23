@@ -17,7 +17,7 @@ use iced::{
 use crate::{
     app::{Message, Page, RUSTCAST_DESC_NAME},
     commands::Function,
-    functions::clipboard::ClipBoardContentType,
+    functions::clipboard::ClipboardContent,
     platform::get_img_handle,
     styles::{result_button_style, result_row_container_style},
 };
@@ -154,7 +154,7 @@ impl SimpleApp {
                     x.as_str(),
                     x.name(),
                     "emoji",
-                    AppCommand::Function(Function::CopyToClipboard(ClipBoardContentType::Text(
+                    AppCommand::Function(Function::CopyToClipboard(ClipboardContent::Text(
                         x.to_string(),
                     ))),
                 )

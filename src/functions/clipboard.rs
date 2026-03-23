@@ -8,18 +8,18 @@ use crate::{
 
 /// The kinds of clipboard content that rustcast can handle and their contents
 #[derive(Debug, Clone)]
-pub enum ClipBoardContentType {
+pub enum ClipboardContent {
     Text(String),
     Image(ImageData<'static>),
 }
 
-impl ClipBoardContentType {
+impl ClipboardContent {
     /// Returns the iced element for rendering the clipboard item, and the entire content since the
     /// display name is only the first line
     pub fn to_app(&self) -> SimpleApp {
         let mut name = match self {
-            ClipBoardContentType::Image(_) => "<img>".to_string(),
-            ClipBoardContentType::Text(a) => a.to_owned(),
+            ClipboardContent::Image(_) => "<img>".to_string(),
+            ClipboardContent::Text(a) => a.to_owned(),
         };
 
         let self_clone = self.clone();
@@ -37,7 +37,7 @@ impl ClipBoardContentType {
     }
 }
 
-impl PartialEq for ClipBoardContentType {
+impl PartialEq for ClipboardContent {
     /// Let clipboard items be comparable
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {

@@ -12,7 +12,7 @@ use crate::{
     },
     commands::Function,
     functions::calculator::Expr,
-    functions::clipboard::ClipBoardContentType,
+    functions::clipboard::ClipboardContent,
     unit_conversion,
 };
 
@@ -118,7 +118,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
                     &source,
                     &target,
                     "Copy to clipboard",
-                    AppCommand::Function(Function::CopyToClipboard(ClipBoardContentType::Text(
+                    AppCommand::Function(Function::CopyToClipboard(ClipboardContent::Text(
                         target.clone(),
                     ))),
                 )
