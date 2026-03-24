@@ -113,7 +113,7 @@ impl Default for Theme {
 
 impl From<Theme> for iced::Theme {
     fn from(value: Theme) -> Self {
-        let palette = iced::theme::Palette {
+        let palette = iced::theme::palette::Seed {
             background: value.bg_color(),
             text: value.text_color(1.),
             primary: iced::Color {
