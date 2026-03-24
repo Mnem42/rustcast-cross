@@ -90,7 +90,7 @@ fn hicon_to_imghandle(hicon: HICON) -> Result<widget::image::Handle, windows::co
 
     // Nonzero return values indicate ok, while zero means error
     if result.0 == 0 {
-        return Err(windows::core::Error::from_win32());
+        return Err(windows::core::Error::from_thread());
     }
 
     let (bitmap_info, bitmap) = get_icon_bitmap(&icon_info)?;
@@ -117,8 +117,8 @@ fn hicon_to_imghandle(hicon: HICON) -> Result<widget::image::Handle, windows::co
 
 fn get_icon_bitmap(icon_info: &ICONINFOEXW) -> Result<(BITMAPINFO, Vec<u8>), windows::core::Error> {
     let hdc_screen = unsafe { CreateCompatibleDC(None) };
-    let hdc_mem = unsafe { CreateCompatibleDC(hdc_screen) };
-    let hbm_old = unsafe { SelectObject(hdc_mem, icon_info.hbmColor) };
+    let hdc_mem = unsafe { CreateCompatibleDC(Some(hdc_screen)) };
+    let hbm_old = unsafe { SelectObject(hdc_mem, icon_info.hbmColor.into()) };
 
     #[allow(
         clippy::cast_possible_truncation,
@@ -155,7 +155,7 @@ fn get_icon_bitmap(icon_info: &ICONINFOEXW) -> Result<(BITMAPINFO, Vec<u8>), win
 
     // It's just stored here because it should still go through to the cleanup code
     let val = if gdib_result == 0 {
-        Err(windows::core::Error::from_win32())
+        Err(windows::core::Error::from_thread())
     } else {
         bgra_to_rgba(buffer.as_mut_slice());
         Ok((bmp_info, buffer))
@@ -166,8 +166,8 @@ fn get_icon_bitmap(icon_info: &ICONINFOEXW) -> Result<(BITMAPINFO, Vec<u8>), win
         SelectObject(hdc_mem, hbm_old);
         DeleteDC(hdc_mem).ok()?;
         DeleteDC(hdc_screen).ok()?;
-        DeleteObject(icon_info.hbmColor).ok()?;
-        DeleteObject(icon_info.hbmMask).ok()?;
+        DeleteObject(icon_info.hbmColor.into()).ok()?;
+        DeleteObject(icon_info.hbmMask.into()).ok()?;
     }
 
     val
