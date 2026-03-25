@@ -5,7 +5,7 @@ use crate::{app::pages::prelude::*, commands::Function, functions::clipboard::Cl
 pub fn emoji_page(
     tile_theme: Theme,
     emojis: &[SimpleApp],
-    focussed_id: u32,
+    focused_id: u32,
 ) -> Element<'static, Message> {
     tracing::trace!(target: "emoji", "Emoji apps: {emojis:?}");
 
@@ -46,7 +46,7 @@ pub fn emoji_page(
                 .width(70)
                 .height(70)
                 .id(format!("result-{id_num}"))
-                .style(move |_| emoji_button_container_style(&theme_clone, focussed_id == id_num)),
+                .style(move |_| emoji_button_container_style(&theme_clone, focused_id == id_num)),
                 container(
                     Text::new(emoji.desc)
                         .font(tile_theme.font())
