@@ -3696,6 +3696,7 @@ name = "rustcast-cross"
 version = "0.6.0"
 dependencies = [
  "anyhow",
+ "arboard",
  "codepage",
  "dirs",
  "emojis",

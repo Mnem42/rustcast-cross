@@ -34,6 +34,7 @@ lnk = "0.6.3"
 codepage = "0.1.2"
 widestring = "1.2.1"
 fuzzy-matcher = "0.3.7"
+arboard = "3.6.1"
 
 # Pinned to the version on github for the image clipboard (apparently it's not that unstable, but
 # remember to update the rev occationally)
