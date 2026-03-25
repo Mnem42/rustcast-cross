@@ -30,62 +30,65 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
     tile.query_lc = input.trim().to_lowercase();
     tile.query = input.to_string();
     let prev_size = tile.results.len();
-    if tile.query_lc.is_empty() && tile.page != Page::ClipboardHistory {
-        tile.results = vec![];
-        return window::resize(
-            id,
-            iced::Size {
-                width: WINDOW_WIDTH,
-                height: DEFAULT_WINDOW_HEIGHT,
-            },
-        );
-    } else if tile.query_lc == "randomvar" {
-        let rand_num = rand::random_range(0..100);
-        tile.results = vec![SimpleApp::new_builtin(
-            &rand_num.to_string(),
-            "",
-            "Easter egg",
-            AppCommand::Function(Function::RandomVar(rand_num)),
-        )];
-        return window::resize(
-            id,
-            iced::Size {
-                width: WINDOW_WIDTH,
-                height: 55. + DEFAULT_WINDOW_HEIGHT,
-            },
-        );
+    match tile.query_lc.as_str() {
+        _ if tile.query_lc.is_empty() && tile.page != Page::ClipboardHistory => {
+            tile.results = vec![];
+            return window::resize(
+                id,
+                iced::Size {
+                    width: WINDOW_WIDTH,
+                    height: DEFAULT_WINDOW_HEIGHT,
+                },
+            );
+        },
+        x if x.starts_with("?") => {
+            tile.results = vec![SimpleApp::new_builtin(
+                &format!("Search for: {}", tile.query),
+                "",
+                "Web Search",
+                AppCommand::Function(Function::GoogleSearch(tile.query.clone())),
+            )];
+            return window::resize(
+                id,
+                iced::Size::new(WINDOW_WIDTH, 55. + DEFAULT_WINDOW_HEIGHT),
+            );
+        },
+        "randomvar" => {
+            let rand_num = rand::random_range(0..100);
+            tile.results = vec![SimpleApp::new_builtin(
+                &rand_num.to_string(),
+                "",
+                "Easter egg",
+                AppCommand::Function(Function::RandomVar(rand_num)),
+            )];
+            return window::resize(
+                id,
+                iced::Size {
+                    width: WINDOW_WIDTH,
+                    height: 55. + DEFAULT_WINDOW_HEIGHT,
+                },
+            );
+        },
+        "67" => {
+            tile.results = vec![SimpleApp::new_builtin(
+                "67",
+                "",
+                "Easter egg",
+                AppCommand::Function(Function::RandomVar(67)),
+            )];
+            return window::resize(
+                id,
+                iced::Size {
+                    width: WINDOW_WIDTH,
+                    height: 55. + DEFAULT_WINDOW_HEIGHT,
+                },
+            );
+        },
+        "cbhist" => tile.page = Page::ClipboardHistory,
+        "main" => tile.page = Page::Main,
+        _ => {}
     }
-    if tile.query_lc == "67" {
-        tile.results = vec![SimpleApp::new_builtin(
-            "67",
-            "",
-            "Easter egg",
-            AppCommand::Function(Function::RandomVar(67)),
-        )];
-        return window::resize(
-            id,
-            iced::Size {
-                width: WINDOW_WIDTH,
-                height: 55. + DEFAULT_WINDOW_HEIGHT,
-            },
-        );
-    }
-    if tile.query_lc.ends_with('?') {
-        tile.results = vec![SimpleApp::new_builtin(
-            &format!("Search for: {}", tile.query),
-            "",
-            "Web Search",
-            AppCommand::Function(Function::GoogleSearch(tile.query.clone())),
-        )];
-        return window::resize(
-            id,
-            iced::Size::new(WINDOW_WIDTH, 55. + DEFAULT_WINDOW_HEIGHT),
-        );
-    } else if tile.query_lc == "cbhist" {
-        tile.page = Page::ClipboardHistory;
-    } else if tile.query_lc == "main" {
-        tile.page = Page::Main;
-    }
+
     tile.handle_search_query_changed();
 
     if tile.results.is_empty()
@@ -158,39 +161,41 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
     let new_length = tile.results.len();
     let max_elem = cmp::min(5, new_length);
 
-    if prev_size != new_length && tile.page != Page::ClipboardHistory {
-        #[allow(
-            clippy::cast_precision_loss,
-            clippy::cast_possible_truncation,
-            clippy::cast_sign_loss
-        )]
-        Task::batch([
-            window::resize(
-                id,
-                iced::Size {
-                    width: WINDOW_WIDTH,
-                    height: ((max_elem * 55) + 35 + DEFAULT_WINDOW_HEIGHT as usize) as f32,
-                },
-            ),
-            Task::done(Message::ChangeFocus(ArrowKey::Left)),
-        ])
-    } else if tile.page == Page::ClipboardHistory {
-        #[allow(
-            clippy::cast_precision_loss,
-            clippy::cast_possible_truncation,
-            clippy::cast_sign_loss
-        )]
-        Task::batch([
-            window::resize(
-                id,
-                iced::Size {
-                    width: WINDOW_WIDTH,
-                    height: ((7 * 55) + 35 + DEFAULT_WINDOW_HEIGHT as usize) as f32,
-                },
-            ),
-            Task::done(Message::ChangeFocus(ArrowKey::Left)),
-        ])
-    } else {
-        Task::none()
+    match tile.page {
+        Page::ClipboardHistory => {
+            #[allow(
+                clippy::cast_precision_loss,
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss
+            )]
+            Task::batch([
+                window::resize(
+                    id,
+                    iced::Size {
+                        width: WINDOW_WIDTH,
+                        height: ((7 * 55) + 35 + DEFAULT_WINDOW_HEIGHT as usize) as f32,
+                    },
+                ),
+                Task::done(Message::ChangeFocus(ArrowKey::Left)),
+            ])
+        },
+        _ if prev_size != new_length => {
+            #[allow(
+                clippy::cast_precision_loss,
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss
+            )]
+            Task::batch([
+                window::resize(
+                    id,
+                    iced::Size {
+                        width: WINDOW_WIDTH,
+                        height: ((max_elem * 55) + 35 + DEFAULT_WINDOW_HEIGHT as usize) as f32,
+                    },
+                ),
+                Task::done(Message::ChangeFocus(ArrowKey::Left)),
+            ])
+        },
+        _ => Task::none()
     }
 }
