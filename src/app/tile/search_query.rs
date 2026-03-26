@@ -40,7 +40,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
                     height: DEFAULT_WINDOW_HEIGHT,
                 },
             );
-        },
+        }
         x if x.starts_with("?") => {
             tile.results = vec![SimpleApp::new_builtin(
                 &format!("Search for: {}", tile.query),
@@ -52,7 +52,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
                 id,
                 iced::Size::new(WINDOW_WIDTH, 55. + DEFAULT_WINDOW_HEIGHT),
             );
-        },
+        }
         "randomvar" => {
             let rand_num = rand::random_range(0..100);
             tile.results = vec![SimpleApp::new_builtin(
@@ -68,7 +68,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
                     height: 55. + DEFAULT_WINDOW_HEIGHT,
                 },
             );
-        },
+        }
         "67" => {
             tile.results = vec![SimpleApp::new_builtin(
                 "67",
@@ -83,7 +83,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
                     height: 55. + DEFAULT_WINDOW_HEIGHT,
                 },
             );
-        },
+        }
         "cbhist" => tile.page = Page::ClipboardHistory,
         "main" => tile.page = Page::Main,
         _ => {}
@@ -162,7 +162,8 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
     let max_elem = cmp::min(5, new_length);
 
     match tile.page {
-        Page::ClipboardHistory => {
+        Page::ClipboardHistory =>
+        {
             #[allow(
                 clippy::cast_precision_loss,
                 clippy::cast_possible_truncation,
@@ -178,8 +179,9 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
                 ),
                 Task::done(Message::ChangeFocus(ArrowKey::Left)),
             ])
-        },
-        _ if prev_size != new_length => {
+        }
+        _ if prev_size != new_length =>
+        {
             #[allow(
                 clippy::cast_precision_loss,
                 clippy::cast_possible_truncation,
@@ -195,7 +197,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
                 ),
                 Task::done(Message::ChangeFocus(ArrowKey::Left)),
             ])
-        },
-        _ => Task::none()
+        }
+        _ => Task::none(),
     }
 }

@@ -92,7 +92,7 @@ fn search_dir(
 /// At the `DEBUG` level, it logs when it starts and both the include and exclude paths.
 ///
 /// It also logs the time taken to index apps at the `INFO` level.
-#[cfg_attr(target_os="windows", allow(clippy::unnecessary_wraps))]
+#[cfg_attr(target_os = "windows", allow(clippy::unnecessary_wraps))]
 pub fn index_installed_apps(config: &Config) -> anyhow::Result<Vec<SimpleApp>> {
     tracing::debug!(target: "indexing", "Indexing installed apps");
     tracing::debug!(target: "indexing", "Exclude patterns: {:?}", &config.index_exclude_patterns);

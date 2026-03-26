@@ -5,10 +5,7 @@ use iced::{
     widget::{Button, Text, text::Wrapping},
 };
 
-use crate::{
-    app::Message,
-    styles::result_button_style,
-};
+use crate::{app::Message, styles::result_button_style};
 
 /// The kinds of clipboard content that rustcast can handle and their contents
 #[derive(Debug, Clone)]

@@ -7,6 +7,7 @@ mod hotkey;
 mod icon;
 mod logging;
 mod platform;
+mod searching;
 mod styles;
 mod unit_conversion;
 mod utils;
