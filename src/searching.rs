@@ -67,6 +67,11 @@ impl<T: Searchable + Clone> Index<T> {
         scored_results.sort_by(|a, b| b.0.cmp(&a.0));
         scored_results
     }
+
+    /// Gets all the items in the index
+    pub fn get(&self) -> &[T] {
+        &self.items
+    }
 }
 
 #[cfg(test)]
