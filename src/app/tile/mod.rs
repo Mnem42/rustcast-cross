@@ -27,7 +27,7 @@ use global_hotkey::{GlobalHotKeyEvent, HotKeyState, hotkey::HotKey};
 
 use crate::{
     app::{
-        ArrowKey, Message, Move, Page, apps::SimpleApp, pages::clipboard::ClipboardState,
+        ArrowKey, Message, Move, Page, apps::App, pages::clipboard::ClipboardState,
         tile::elm::default_app_paths,
     },
     config::Config,
@@ -57,12 +57,12 @@ impl Drop for ExtSender {
 /// All the indexed apps that rustcast can search for
 #[derive(Clone, Debug)]
 struct AppIndex {
-    by_name: BTreeMap<String, SimpleApp>,
+    by_name: BTreeMap<String, App>,
 }
 
 impl AppIndex {
     /// Search for an element in the index that starts with the provided prefix
-    fn search_prefix<'a>(&'a self, prefix: &'a str) -> impl Iterator<Item = &'a SimpleApp> + 'a {
+    fn search_prefix<'a>(&'a self, prefix: &'a str) -> impl Iterator<Item = &'a App> + 'a {
         self.by_name
             .range::<str, _>((Bound::Included(prefix), Bound::Unbounded))
             .take_while(move |(k, _)| k.starts_with(prefix))
@@ -70,7 +70,7 @@ impl AppIndex {
     }
 
     /// Factory function for creating
-    pub fn from_apps(options: Vec<SimpleApp>) -> Self {
+    pub fn from_apps(options: Vec<App>) -> Self {
         let mut bmap = BTreeMap::new();
         for app in options {
             bmap.insert(app.alias.clone(), app);
@@ -101,7 +101,7 @@ pub struct Tile {
     pub focus_id: u32,
     pub query: String,
     query_lc: String,
-    results: Vec<SimpleApp>,
+    results: Vec<App>,
     options: AppIndex,
     emoji_apps: AppIndex,
     visible: bool,
@@ -238,7 +238,7 @@ impl Tile {
 
         let matcher = SkimMatcherV2::default();
 
-        let mut scored_results: Vec<(i64, SimpleApp)> = options
+        let mut scored_results: Vec<(i64, App)> = options
             .by_name
             .values()
             .filter_map(|app| {

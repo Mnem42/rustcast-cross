@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use crate::app::apps::AppCommand;
-    use crate::app::pages::prelude::SimpleApp;
+    use crate::app::pages::prelude::App;
     use fuzzy_matcher::FuzzyMatcher;
     use fuzzy_matcher::skim::SkimMatcherV2;
 

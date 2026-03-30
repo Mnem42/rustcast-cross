@@ -4,15 +4,15 @@ use crate::{app::pages::prelude::*, commands::Function, functions::clipboard::Cl
 
 pub fn emoji_page(
     tile_theme: Theme,
-    emojis: &[SimpleApp],
+    emojis: &[App],
     focused_id: u32,
 ) -> Element<'static, Message> {
     tracing::trace!(target: "emoji", "Emoji apps: {emojis:?}");
 
     let emoji_vec = emojis
         .chunks(6)
-        .map(<[SimpleApp]>::to_vec)
-        .collect::<Vec<Vec<SimpleApp>>>();
+        .map(<[App]>::to_vec)
+        .collect::<Vec<Vec<App>>>();
 
     let mut column = Vec::new();
 

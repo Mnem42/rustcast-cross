@@ -8,7 +8,7 @@ use tracing::Level;
 #[cfg(target_os = "windows")]
 use crate::platform::windows::get_known_paths;
 use crate::{
-    app::apps::{AppData, SimpleApp},
+    app::apps::{AppData, App},
     platform::get_img_handle,
 };
 
@@ -217,13 +217,13 @@ pub struct Shelly {
 
 impl Shelly {
     /// Converts the shelly struct to an app so that it can be added to the app list
-    pub fn to_app(&self) -> SimpleApp {
+    pub fn to_app(&self) -> App {
         let self_clone = self.clone();
         let icon = self_clone.icon_path.map(|x| {
             let x = x.replace('~', &std::env::var("HOME").unwrap());
             get_img_handle(&PathBuf::from(x))
         });
-        SimpleApp::new(
+        App::new(
             &self_clone.alias,
             &self_clone.alias_lc,
             "Shell Command",

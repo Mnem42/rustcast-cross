@@ -8,7 +8,7 @@ use super::Tile;
 use crate::{
     app::{
         ArrowKey, DEFAULT_WINDOW_HEIGHT, Message, Page, WINDOW_WIDTH,
-        apps::{AppCommand, SimpleApp},
+        apps::{AppCommand, App},
     },
     commands::Function,
     functions::calculator::Expr,
@@ -42,7 +42,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
             );
         }
         x if x.starts_with("?") => {
-            tile.results = vec![SimpleApp::new_builtin(
+            tile.results = vec![App::new_builtin(
                 &format!("Search for: {}", tile.query),
                 "",
                 "Web Search",
@@ -55,7 +55,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
         }
         "randomvar" => {
             let rand_num = rand::random_range(0..100);
-            tile.results = vec![SimpleApp::new_builtin(
+            tile.results = vec![App::new_builtin(
                 &rand_num.to_string(),
                 "",
                 "Easter egg",
@@ -70,7 +70,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
             );
         }
         "67" => {
-            tile.results = vec![SimpleApp::new_builtin(
+            tile.results = vec![App::new_builtin(
                 "67",
                 "",
                 "Easter egg",
@@ -95,7 +95,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
         && let Some(res) = Expr::from_str(&tile.query).ok()
     {
         let res_string = res.eval().map_or(String::new(), |x| x.to_string());
-        tile.results.push(SimpleApp::new_builtin(
+        tile.results.push(App::new_builtin(
             &res_string,
             "",
             "Calculation result",
@@ -117,7 +117,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
                     unit_conversion::format_number(conversion.target_value),
                     conversion.target_unit.name
                 );
-                SimpleApp::new_builtin(
+                App::new_builtin(
                     &source,
                     &target,
                     "Copy to clipboard",
@@ -128,14 +128,14 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
             })
             .collect();
     } else if tile.results.is_empty() && url::Url::parse(input).is_ok() {
-        tile.results.push(SimpleApp::new_builtin(
+        tile.results.push(App::new_builtin(
             "Web Browsing",
             "",
             &format!("Open website: {}", tile.query),
             AppCommand::Function(Function::OpenWebsite(tile.query.clone())),
         ));
     } else if tile.query_lc.split(' ').count() > 1 {
-        tile.results.push(SimpleApp::new_builtin(
+        tile.results.push(App::new_builtin(
             &format!("Search for: {}", tile.query),
             "",
             "Web Search",
@@ -143,7 +143,7 @@ pub(super) fn handle_change(tile: &mut Tile, input: &str, id: Id) -> iced::Task<
         ));
     } else if tile.results.is_empty() && tile.query_lc == "lemon" {
         #[cfg(target_os = "macos")]
-        tile.results.push(SimpleApp::new_builtin(
+        tile.results.push(App::new_builtin(
             "Easter Egg",
             "Lemon",
             "",

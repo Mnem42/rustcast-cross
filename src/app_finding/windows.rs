@@ -1,7 +1,7 @@
 //! Functions specific to windows
 
 use {
-    crate::{app::apps::SimpleApp, platform::windows::get_acp},
+    crate::{app::apps::App, platform::windows::get_acp},
     std::path::PathBuf,
     walkdir::WalkDir,
 };
@@ -12,7 +12,7 @@ use {
 /// `apps` has the relevant items appended to it.
 ///
 /// Based on <https://stackoverflow.com/questions/2864984>
-pub fn get_apps_from_registry(apps: &mut Vec<SimpleApp>) {
+pub fn get_apps_from_registry(apps: &mut Vec<App>) {
     use std::ffi::OsString;
     let hkey = winreg::RegKey::predef(winreg::enums::HKEY_LOCAL_MACHINE);
 
@@ -53,7 +53,7 @@ pub fn get_apps_from_registry(apps: &mut Vec<SimpleApp>) {
             }
 
             if !display_name.is_empty() {
-                apps.push(SimpleApp::new_executable(
+                apps.push(App::new_executable(
                     &display_name.clone().to_string_lossy(),
                     &display_name.clone().to_string_lossy().to_lowercase(),
                     exe_string,
@@ -65,7 +65,7 @@ pub fn get_apps_from_registry(apps: &mut Vec<SimpleApp>) {
     }
 }
 
-pub fn index_start_menu() -> Vec<SimpleApp> {
+pub fn index_start_menu() -> Vec<App> {
     WalkDir::new(r"C:\ProgramData\Microsoft\Windows\Start Menu\Programs")
         .into_iter()
         .filter_map(std::result::Result::ok)
@@ -78,7 +78,7 @@ pub fn index_start_menu() -> Vec<SimpleApp> {
                     let file_name = path.file_name().to_string_lossy().to_string();
 
                     if let Some(target) = target {
-                        Some(SimpleApp::new_executable(
+                        Some(App::new_executable(
                             &file_name,
                             &file_name,
                             &target,

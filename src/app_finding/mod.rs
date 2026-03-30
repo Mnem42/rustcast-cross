@@ -5,7 +5,7 @@
 use std::path::Path;
 use std::time::Instant;
 
-use crate::{app::apps::SimpleApp, config::Config};
+use crate::{app::apps::App, config::Config};
 use rayon::prelude::*;
 
 #[cfg(any(doc, target_os = "linux"))]
@@ -24,7 +24,7 @@ fn search_dir(
     exclude_patterns: &[glob::Pattern],
     include_patterns: &[glob::Pattern],
     max_depth: usize,
-) -> impl ParallelIterator<Item = SimpleApp> {
+) -> impl ParallelIterator<Item = App> {
     use walkdir::WalkDir;
 
     WalkDir::new(path.as_ref())
@@ -73,7 +73,7 @@ fn search_dir(
             #[cfg(not(target_os = "windows"))]
             let icon = None;
 
-            Some(SimpleApp::new_executable(
+            Some(App::new_executable(
                 &name,
                 &name.to_lowercase(),
                 &path.to_string_lossy(),
@@ -93,7 +93,7 @@ fn search_dir(
 ///
 /// It also logs the time taken to index apps at the `INFO` level.
 #[cfg_attr(target_os = "windows", allow(clippy::unnecessary_wraps))]
-pub fn index_installed_apps(config: &Config) -> anyhow::Result<Vec<SimpleApp>> {
+pub fn index_installed_apps(config: &Config) -> anyhow::Result<Vec<App>> {
     tracing::debug!(target: "indexing", "Indexing installed apps");
     tracing::debug!(target: "indexing", "Exclude patterns: {:?}", &config.index_exclude_patterns);
     tracing::debug!(target: "indexing", "Include patterns: {:?}", &config.index_include_patterns);
